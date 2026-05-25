@@ -1,0 +1,2423 @@
+/* ============================================================
+   PEACE BURGER LP — styles.css
+   Figma node 2006:2「01_Hero」を実装
+   設計幅 = 1672px。全要素を canvas 幅基準の cqi で配置し、
+   ビューポート幅に比例してデザイン全体がスケールする。
+   座標は各セクション frame 内の相対座標（Figma metadata 準拠）。
+   ※ 現在はセクション1のみ。以降は確認後に追加していく。
+   ============================================================ */
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+img { display: block; max-width: 100%; height: auto; -webkit-user-drag: none; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; border: 0; background: none; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+
+/* ---------- Design tokens ---------- */
+:root {
+  --design-w: 1672;
+
+  --yellow:      #FCC503;
+  --yellow-soft: #FCCF18;
+  --red:         #D11917;
+  --red-deep:    #B3110F;
+  --brown:       #582600;
+  --brown-text:  #3A1F0E;
+  --cream:       #FFF4D9;
+  --cream-menu:  #FCF0D3;
+  --white:       #FFFFFF;
+  --ink:         #2A2A2A;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+  font-weight: 500;
+  color: var(--brown-text);
+  background: var(--yellow);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   Canvas + section base
+   ============================================================ */
+.canvas {
+  width: 100%;
+  max-width: calc(var(--design-w) * 1px);
+  margin: 0 auto;
+  container-type: inline-size;
+  position: relative;
+  overflow: hidden;
+}
+
+.section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* 角丸: 最上段の上2隅 / 最下段の下2隅のみ */
+.canvas > .section:first-child {
+  border-top-left-radius:  calc(36 / var(--design-w) * 100cqi);
+  border-top-right-radius: calc(36 / var(--design-w) * 100cqi);
+}
+.canvas > .section:last-child {
+  border-bottom-left-radius:  calc(36 / var(--design-w) * 100cqi);
+  border-bottom-right-radius: calc(36 / var(--design-w) * 100cqi);
+}
+
+/* ---------- 絶対配置ヘルパー（座標は section frame 相対 px） ---------- */
+.abs {
+  position: absolute;
+  left:   calc(var(--x) / var(--design-w) * 100cqi);
+  top:    calc(var(--y) / var(--design-w) * 100cqi);
+  width:  calc(var(--w) / var(--design-w) * 100cqi);
+  height: calc(var(--h) / var(--design-w) * 100cqi);
+}
+.deco { z-index: 2; pointer-events: none; object-fit: contain; }
+.deco--overphoto { z-index: 4; }  /* 写真(z=3)に重なる前面装飾 */
+.deco--front { z-index: 6; }       /* スタンプ・バッジ等の最前面 */
+.flip-x { transform: scaleX(-1); }
+
+/* R1: 位置だけ絶対・高さは中身しだい（auto）のフローコンテナ。
+   高さ可変のテキスト＋直後のボタン等をこの中に入れて重なりを防ぐ。 */
+.flow {
+  position: absolute;
+  left:  calc(var(--x) / var(--design-w) * 100cqi);
+  top:   calc(var(--y) / var(--design-w) * 100cqi);
+  width: calc(var(--w) / var(--design-w) * 100cqi);
+}
+
+/* テキストボックス: --fs で px 指定したフォントを cqi スケール */
+.tx {
+  position: absolute;
+  left: calc(var(--x) / var(--design-w) * 100cqi);
+  top:  calc(var(--y) / var(--design-w) * 100cqi);
+  width: calc(var(--w) / var(--design-w) * 100cqi);
+  font-size: calc(var(--fs, 22) / var(--design-w) * 100cqi);
+  line-height: 1.55;
+  z-index: 5;
+}
+
+/* ============================================================
+   01. HERO  (1672 x 971)
+   ============================================================ */
+.s-hero { background: var(--yellow); aspect-ratio: 1672 / 971; }
+
+/* ヘッダーナビ */
+.hero-nav {
+  position: absolute;
+  left: calc(925 / var(--design-w) * 100cqi);
+  top:  calc(36  / var(--design-w) * 100cqi);
+  z-index: 20;
+  display: flex; align-items: center;
+  gap: calc(16 / var(--design-w) * 100cqi);
+  font-weight: 900;
+  font-size: calc(36 / var(--design-w) * 100cqi);
+  letter-spacing: .04em;
+  color: var(--brown-text);
+}
+.hero-nav a { transition: color .15s; }
+.hero-nav a:hover { color: var(--red); }
+.hero-nav .sep {
+  width: 0; height: calc(40 / var(--design-w) * 100cqi);
+  border-left: calc(3 / var(--design-w) * 100cqi) solid var(--brown-text);
+  transform: rotate(20deg);
+}
+
+/* ヒーロー写真 + 影（軽く傾ける） */
+.hero-shadow { z-index: 2; background: #4D2501; border-radius: calc(18/var(--design-w)*100cqi); transform: rotate(-3deg); }
+.hero-photo  { z-index: 3; overflow: hidden; background: #4D2501; border-radius: calc(18/var(--design-w)*100cqi); transform: rotate(-3deg); }
+.hero-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ============================================================
+   01-anim. HERO アニメーション
+   ・写真：ドロップイン → ふわふわ浮遊（連続）
+   ・見出し「日曜は…」：ポップイン → ゆらゆら（連続）
+   ・赤波線：見出しに少し遅れて伸びるように出現 → 微パルス
+   ・Sunday Only スタンプ：少し遅れてスタンプを押す動き → 微ゆらぎ
+   ============================================================ */
+
+/* ---- ヒーロー写真：登場 ---- */
+@keyframes hero-photo-drop {
+  0%   { opacity: 0; transform: rotate(6deg)  translateY(calc(-60/var(--design-w)*100cqi)) scale(.88); }
+  55%  { opacity: 1; transform: rotate(-5deg) translateY(calc(8/var(--design-w)*100cqi))   scale(1.03); }
+  78%  {              transform: rotate(-2deg) translateY(calc(-4/var(--design-w)*100cqi)) scale(1); }
+  100% { opacity: 1; transform: rotate(-3deg) translateY(0) scale(1); }
+}
+/* ---- ヒーロー写真：登場後の浮遊（rotate -3deg を保持） ---- */
+@keyframes hero-photo-float {
+  0%, 100% { transform: rotate(-3deg) translateY(0); }
+  50%      { transform: rotate(-3deg) translateY(calc(-14/var(--design-w)*100cqi)); }
+}
+.hero-photo-anim {
+  animation:
+    hero-photo-drop  1.1s cubic-bezier(.34,1.56,.64,1) both,
+    hero-photo-float 4.8s ease-in-out 1.1s infinite;
+  will-change: transform;
+}
+
+/* ---- 大見出し「日曜はピースバーガーの日！」：登場 ---- */
+@keyframes hero-headline-pop {
+  0%   { opacity: 0; transform: scale(.55) rotate(-6deg); }
+  55%  { opacity: 1; transform: scale(1.10) rotate(2deg); }
+  78%  {              transform: scale(.97) rotate(-1deg); }
+  100% { opacity: 1; transform: scale(1)    rotate(0deg); }
+}
+/* ---- 大見出し：登場後のゆらゆら ---- */
+@keyframes hero-headline-wiggle {
+  0%, 100% { transform: scale(1)     rotate(0deg); }
+  25%      { transform: scale(1.025) rotate(-1.2deg); }
+  50%      { transform: scale(1.035) rotate(0deg); }
+  75%      { transform: scale(1.025) rotate(1.2deg); }
+}
+.hero-headline {
+  transform-origin: 35% 60%;
+  animation:
+    hero-headline-pop    .9s cubic-bezier(.34,1.56,.64,1) .2s both,
+    hero-headline-wiggle 3.6s ease-in-out 1.4s infinite;
+  will-change: transform;
+}
+
+/* ---- 赤波線：見出しの直後にスッと現れて微パルス ---- */
+@keyframes hero-wave-in {
+  0%   { opacity: 0; transform: translateX(calc(-30/var(--design-w)*100cqi)) scaleX(.4); }
+  100% { opacity: 1; transform: translateX(0) scaleX(1); }
+}
+@keyframes hero-wave-pulse {
+  0%, 100% { transform: scaleX(1)    scaleY(1); }
+  50%      { transform: scaleX(1.04) scaleY(1.10); }
+}
+.hero-wave {
+  transform-origin: 0% 50%;
+  animation:
+    hero-wave-in    .6s ease-out 1.1s both,
+    hero-wave-pulse 2.4s ease-in-out 1.8s infinite;
+  will-change: transform;
+}
+
+/* ---- Sunday Only! スタンプ：少し遅れて押す動き → 微ゆらぎ ---- */
+@keyframes hero-stamp-in {
+  0%   { opacity: 0; transform: scale(1.8) rotate(-18deg); }
+  60%  { opacity: 1; transform: scale(.92) rotate(4deg); }
+  100% { opacity: 1; transform: scale(1)   rotate(0deg); }
+}
+@keyframes hero-stamp-wobble {
+  0%, 100% { transform: scale(1)    rotate(0deg); }
+  50%      { transform: scale(1.03) rotate(-2deg); }
+}
+.hero-sunday-stamp {
+  transform-origin: 50% 50%;
+  animation:
+    hero-stamp-in     .7s cubic-bezier(.34,1.56,.64,1) 1.3s both,
+    hero-stamp-wobble 3s ease-in-out 2.1s infinite;
+  will-change: transform;
+}
+
+/* ---- アクセシビリティ：モーション抑制設定を尊重 ---- */
+@media (prefers-reduced-motion: reduce) {
+  .hero-photo-anim,
+  .hero-headline,
+  .hero-wave,
+  .hero-sunday-stamp {
+    animation: none !important;
+  }
+}
+
+/* ============================================================
+   FX. 装飾アイコン用 汎用アニメーション ユーティリティ
+   セクション 1〜4 で周囲を取り囲む装飾群（星・雷・麦・矢印・
+   インパクトライン・スター集合・ハート・炎・スパイラル 等）に
+   ちょっとした動きを与えて紙面全体に華やかさを残す。
+   ・周期と位相を散らして同期しないようにする
+   ・回転がインラインで掛かっている要素には .fx-glow 系を使い、
+     opacity のみ動かして回転と競合させない
+   ・通常の星・点・小物には .fx-twinkle / .fx-pulse など
+   ============================================================ */
+
+/* ---- twinkle: 拡縮 + 回転 + 透明度（非回転 deco 用） ---- */
+@keyframes fx-twinkle {
+  0%, 100% { transform: scale(1)    rotate(0deg);  opacity: 1;   }
+  50%      { transform: scale(1.18) rotate(10deg); opacity: .55; }
+}
+.fx-twinkle    { animation: fx-twinkle 3.0s ease-in-out infinite;      transform-origin: 50% 50%; }
+.fx-twinkle-d1 { animation: fx-twinkle 2.6s ease-in-out infinite .4s;  transform-origin: 50% 50%; }
+.fx-twinkle-d2 { animation: fx-twinkle 3.4s ease-in-out infinite .8s;  transform-origin: 50% 50%; }
+.fx-twinkle-d3 { animation: fx-twinkle 2.4s ease-in-out infinite 1.2s; transform-origin: 50% 50%; }
+.fx-twinkle-d4 { animation: fx-twinkle 3.2s ease-in-out infinite .2s;  transform-origin: 50% 50%; }
+
+/* scaleX(-1)（flip-x）を保持したまま twinkle */
+@keyframes fx-twinkle-flip {
+  0%, 100% { transform: scaleX(-1) scale(1)    rotate(0deg);   opacity: 1;   }
+  50%      { transform: scaleX(-1) scale(1.18) rotate(-10deg); opacity: .55; }
+}
+.fx-twinkle-flip { animation: fx-twinkle-flip 3.0s ease-in-out infinite .6s; transform-origin: 50% 50%; }
+
+/* ---- pulse: 拡縮 + 透明度（非回転 deco 用） ---- */
+@keyframes fx-pulse {
+  0%, 100% { opacity: 1;  transform: scale(1);   }
+  50%      { opacity: .6; transform: scale(.93); }
+}
+.fx-pulse    { animation: fx-pulse 3.4s ease-in-out infinite;       transform-origin: 50% 50%; }
+.fx-pulse-d1 { animation: fx-pulse 2.8s ease-in-out infinite .5s;   transform-origin: 50% 50%; }
+.fx-pulse-d2 { animation: fx-pulse 3.0s ease-in-out infinite .9s;   transform-origin: 50% 50%; }
+.fx-pulse-d3 { animation: fx-pulse 3.6s ease-in-out infinite 1.4s;  transform-origin: 50% 50%; }
+
+/* ---- flash: 時々パッと跳ねる（雷・スター集合 等） ---- */
+@keyframes fx-flash {
+  0%, 86%, 100% { opacity: .95; transform: scale(1); }
+  88%           { opacity: 1;   transform: scale(1.22) rotate(-6deg); }
+  91%           { opacity: .65; transform: scale(.95)  rotate(3deg);  }
+  94%           { opacity: 1;   transform: scale(1.12) rotate(-2deg); }
+  97%           { opacity: .9;  transform: scale(1)    rotate(0deg);  }
+}
+.fx-flash    { animation: fx-flash 4.2s ease-in-out infinite;       transform-origin: 50% 50%; }
+.fx-flash-d1 { animation: fx-flash 3.8s ease-in-out infinite .8s;   transform-origin: 50% 50%; }
+.fx-flash-d2 { animation: fx-flash 4.6s ease-in-out infinite 1.5s;  transform-origin: 50% 50%; }
+
+/* ---- bob: 上下にふわふわ（麦・矢印・装飾物） ---- */
+@keyframes fx-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(calc(-6/var(--design-w)*100cqi)); }
+}
+.fx-bob    { animation: fx-bob 3.5s ease-in-out infinite;       transform-origin: 50% 100%; }
+.fx-bob-d1 { animation: fx-bob 3.0s ease-in-out infinite .5s;   transform-origin: 50% 100%; }
+.fx-bob-d2 { animation: fx-bob 4.0s ease-in-out infinite 1.0s;  transform-origin: 50% 100%; }
+
+/* ---- sway: 左右に揺れ（麦・葉等の軽い揺らぎ） ---- */
+@keyframes fx-sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50%      { transform: rotate(3deg);  }
+}
+.fx-sway    { animation: fx-sway 3.5s ease-in-out infinite;     transform-origin: 50% 100%; }
+.fx-sway-d1 { animation: fx-sway 4.0s ease-in-out infinite .4s; transform-origin: 50% 100%; }
+
+/* ---- spin-slow: ゆっくり回転（スターバースト 等） ---- */
+@keyframes fx-spin-slow {
+  0%   { transform: rotate(0deg)   scale(1);    }
+  50%  { transform: rotate(180deg) scale(1.06); }
+  100% { transform: rotate(360deg) scale(1);    }
+}
+.fx-spin-slow { animation: fx-spin-slow 9s linear infinite; transform-origin: 50% 50%; }
+
+/* ---- glow: opacity のみ動かす
+        （回転がインラインで掛かっている要素に使う・transform と競合しない） ---- */
+@keyframes fx-glow {
+  0%, 100% { opacity: 1;   }
+  50%      { opacity: .55; }
+}
+.fx-glow    { animation: fx-glow 3.2s ease-in-out infinite;      }
+.fx-glow-d1 { animation: fx-glow 2.7s ease-in-out infinite .5s;  }
+.fx-glow-d2 { animation: fx-glow 3.6s ease-in-out infinite 1.0s; }
+.fx-glow-d3 { animation: fx-glow 2.4s ease-in-out infinite 1.4s; }
+
+/* モーション抑制 */
+@media (prefers-reduced-motion: reduce) {
+  [class*="fx-twinkle"], [class*="fx-pulse"], [class*="fx-flash"],
+  [class*="fx-bob"],     [class*="fx-sway"],  [class*="fx-spin"],
+  [class*="fx-glow"] {
+    animation: none !important;
+  }
+}
+
+/* ============================================================
+   tw. タイプライター演出（汎用）
+   ・各文字: 透明 → 一瞬で表示。opacity だけ動かすため、最初から
+     最終行高さが確保され、下の要素が押し下げられない（R1整合）。
+   ・末尾カーソル: タイプ完了タイミングから点滅開始。
+   ・.tw-play が付くまで非表示のまま待機（on-view 再生に対応）。
+   ============================================================ */
+.tw-char {
+  opacity: 0;
+}
+.tw-char.tw-play {
+  animation: tw-char-reveal .08s ease-out forwards;
+}
+@keyframes tw-char-reveal {
+  to { opacity: 1; }
+}
+
+.tw-cursor {
+  display: inline-block;
+  width: .1em;
+  height: 1em;
+  background: currentColor;
+  vertical-align: -.12em;
+  margin-left: .12em;
+  opacity: 0; /* 表示開始までは消しておく */
+  border-radius: 1px;
+}
+.tw-cursor.tw-play {
+  animation: tw-cursor-blink 1s steps(2, end) infinite;
+}
+@keyframes tw-cursor-blink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* モーション抑制時は素の文章として表示（JS 側でも何もしないが、念のため） */
+@media (prefers-reduced-motion: reduce) {
+  .tw-char { opacity: 1; animation: none !important; }
+  .tw-cursor { display: none; }
+}
+
+/* リード文＋CTA のまとまり（フロー配置・重なり防止） */
+.hero-cta { z-index: 7; }
+.hero-lead {
+  margin: 0;
+  color: var(--brown-text); font-weight: 700;
+  /* Figma 枠 110px / 3行 ≈ 行高 1.8 に合わせる */
+  line-height: 1.8;
+  font-size: calc(var(--fs, 20) / var(--design-w) * 100cqi);
+}
+.hero-btns {
+  display: flex;
+  gap: calc(24 / var(--design-w) * 100cqi);
+  /* テキスト左端(176)に対しボタン群を Figma 同様にやや右(226)へ */
+  margin-left: calc(50 / var(--design-w) * 100cqi);
+  margin-top: calc(26 / var(--design-w) * 100cqi);
+}
+
+/* CTA ボタン（共通・フロー内に置く＝幅は中身しだい） */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: calc(8 / var(--design-w) * 100cqi);
+  height: calc(58 / var(--design-w) * 100cqi);
+  padding: 0 calc(32 / var(--design-w) * 100cqi);
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: calc(24 / var(--design-w) * 100cqi);
+  letter-spacing: .04em;
+  white-space: nowrap;
+  transition: transform .15s, filter .15s;
+  box-shadow: 0 calc(4/var(--design-w)*100cqi) 0 rgba(0,0,0,.18);
+}
+.btn:hover { transform: translateY(calc(-2/var(--design-w)*100cqi)); filter: brightness(1.05); }
+.btn--red   { background: var(--red);   color: #fff; border: calc(3/var(--design-w)*100cqi) solid var(--brown-text); }
+.btn--white { background: #fff; color: var(--brown-text); border: calc(3/var(--design-w)*100cqi) solid var(--brown-text); }
+
+/* ============================================================
+   02. BEST SELLER  (1672 x 931)
+   ============================================================ */
+.s-best { background: #D11917; aspect-ratio: 1672 / 931; }
+
+/* BEST SELLER リボン（左上・斜め） */
+.best-ribbon {
+  position: absolute; z-index: 5;
+  left: calc(-150 / var(--design-w) * 100cqi);
+  top:  calc(86 / var(--design-w) * 100cqi);
+  width: calc(760 / var(--design-w) * 100cqi);
+  background: var(--yellow);
+  transform: rotate(-19deg);
+  text-align: center;
+  padding: calc(10 / var(--design-w) * 100cqi) 0;
+  box-shadow: 0 calc(4/var(--design-w)*100cqi) calc(10/var(--design-w)*100cqi) rgba(0,0,0,.25);
+}
+.best-ribbon span {
+  color: var(--red); font-weight: 900;
+  font-size: calc(46 / var(--design-w) * 100cqi);
+  letter-spacing: .06em; white-space: nowrap;
+}
+
+/* 写真フレーム（白枠・軽い傾き） */
+.best-frame {
+  position: absolute; z-index: 3;
+  left: calc(184 / var(--design-w) * 100cqi);
+  top:  calc(202 / var(--design-w) * 100cqi);
+  width:  calc(631 / var(--design-w) * 100cqi);
+  height: calc(700 / var(--design-w) * 100cqi);
+  background: #fff;
+  border-radius: calc(20 / var(--design-w) * 100cqi);
+  overflow: hidden;
+  transform: rotate(-3.3deg);
+  box-shadow: 0 calc(10/var(--design-w)*100cqi) calc(28/var(--design-w)*100cqi) rgba(0,0,0,.3);
+}
+/* 画像は枠の高さよりやや小さく収め、左右はみ出し分のみ overflow でクリップ
+   （Figma同様、上下に白余白／皿の下が切れないように） */
+.best-frame img {
+  position: absolute; left: 50%; top: 52%;
+  transform: translate(-50%, -50%);
+  width: auto; height: 95%; max-width: none;
+}
+
+/* Peace Burger 見出し（Kameron・クリーム＋茶の影） */
+.best-title {
+  z-index: 5; color: #F8E7C7;
+  font-family: "Kameron", serif; font-weight: 700;
+  font-size: calc(190 / var(--design-w) * 100cqi);
+  line-height: calc(150 / var(--design-w) * 100cqi);
+  transform: rotate(-4.6deg);
+  text-shadow: 0 calc(10/var(--design-w)*100cqi) 0 #4D2401;
+}
+
+/* 右側コンテンツ（価格・説明・ボタン）＝フローのまとまり（R1） */
+.best-content { z-index: 5; display: flex; flex-direction: column; align-items: flex-start; gap: calc(22 / var(--design-w) * 100cqi); }
+.best-price { display: flex; align-items: baseline; color: #F8E7C7; font-family: "Fredoka", sans-serif; font-weight: 700; font-size: calc(150 / var(--design-w) * 100cqi); line-height: 1; }
+.best-price .yen { font-size: calc(100 / var(--design-w) * 100cqi); margin-right: calc(4/var(--design-w)*100cqi); }
+.best-divider { width: calc(547 / var(--design-w) * 100cqi); height: 0; border-top: calc(3/var(--design-w)*100cqi) dashed rgba(248,231,199,.8); }
+.best-desc { color: #F8E7C7; font-weight: 700; font-size: calc(30 / var(--design-w) * 100cqi); line-height: 1.28; }
+.best-btn {
+  display: inline-flex; align-items: center; gap: calc(10/var(--design-w)*100cqi);
+  background: var(--yellow); color: var(--red);
+  font-weight: 900; font-size: calc(33 / var(--design-w) * 100cqi);
+  padding: calc(14/var(--design-w)*100cqi) calc(30/var(--design-w)*100cqi);
+  border-radius: calc(16/var(--design-w)*100cqi);
+  white-space: nowrap;
+  box-shadow: 0 calc(4/var(--design-w)*100cqi) calc(8/var(--design-w)*100cqi) rgba(0,0,0,.25);
+  transition: transform .15s, filter .15s;
+}
+.best-btn:hover { transform: translateY(calc(-2/var(--design-w)*100cqi)); filter: brightness(1.05); }
+
+/* ============================================================
+   02-anim. BEST SELLER アニメーション（in-view で発火）
+   ・写真フレーム：勢いよく回転しながら飛び込む → ゆっくり浮遊
+   ・Peace Burger 見出し：大きくスケールアップ＋揺らぎ
+   ・説明文：タイプライター（JS 側で発火）
+   ============================================================ */
+
+/* 初期状態（in-view が付くまで非表示）。SR/JS 無効時のフォールバックは
+   下の @media (prefers-reduced-motion) と JS の has-IO 分岐で担保。 */
+.s-best[data-animate-on-view] .best-frame,
+.s-best[data-animate-on-view] .best-title {
+  opacity: 0;
+}
+
+/* ---- バーガー写真フレーム：ドラマチック登場 → 連続フロート ---- */
+@keyframes best-frame-in {
+  0%   { opacity: 0; transform: rotate(12deg)  scale(.55) translateY(calc(40/var(--design-w)*100cqi)); }
+  55%  { opacity: 1; transform: rotate(-7deg)  scale(1.06) translateY(calc(-10/var(--design-w)*100cqi)); }
+  78%  {              transform: rotate(-1.5deg) scale(.99) translateY(calc(4/var(--design-w)*100cqi)); }
+  100% { opacity: 1; transform: rotate(-3.3deg) scale(1)   translateY(0); }
+}
+@keyframes best-frame-float {
+  0%, 100% { transform: rotate(-3.3deg) translateY(0); }
+  50%      { transform: rotate(-3.3deg) translateY(calc(-12/var(--design-w)*100cqi)); }
+}
+.s-best.in-view .best-frame {
+  animation:
+    best-frame-in    1.15s cubic-bezier(.34,1.56,.64,1) .05s both,
+    best-frame-float 4s ease-in-out 1.3s infinite;
+  will-change: transform;
+}
+
+/* ---- Peace Burger 見出し：超ダイナミックなポップイン → 揺らぎ ---- */
+@keyframes best-title-pop {
+  0%   { opacity: 0; transform: rotate(-30deg) scale(.25); }
+  45%  { opacity: 1; transform: rotate(6deg)   scale(1.18); }
+  70%  {              transform: rotate(-7deg)  scale(.96); }
+  88%  {              transform: rotate(-3deg)  scale(1.03); }
+  100% { opacity: 1; transform: rotate(-4.6deg) scale(1); }
+}
+@keyframes best-title-wiggle {
+  0%, 100% { transform: rotate(-4.6deg) scale(1); }
+  25%      { transform: rotate(-5.6deg) scale(1.025); }
+  50%      { transform: rotate(-4.6deg) scale(1.04); }
+  75%      { transform: rotate(-3.6deg) scale(1.025); }
+}
+.s-best.in-view .best-title {
+  /* base CSS では transform: none（.flow なので絶対配置のみ）。
+     ここで -4.6deg を含むキーフレームを当てて完成形にする。 */
+  transform-origin: 50% 50%;
+  animation:
+    best-title-pop    1.1s cubic-bezier(.34,1.56,.64,1) .3s both,
+    best-title-wiggle 3.6s ease-in-out 1.6s infinite;
+  will-change: transform;
+}
+
+/* モーション抑制時はアニメ無効＆初期 opacity:0 を打ち消す */
+@media (prefers-reduced-motion: reduce) {
+  .s-best[data-animate-on-view] .best-frame,
+  .s-best[data-animate-on-view] .best-title {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+}
+
+/* ---- 全メニューを見るボタン：ポヨンポヨン跳ねる（無限ループ） ----
+   squash & stretch を取り入れた弾むモーション。
+   60% は静止のまま「ため」を作って、ぽよん→ぽよん…という鳴り。
+   transform-origin: bottom にして「地面に着地する」感を出す。 */
+.s-best.in-view .best-btn {
+  transform-origin: 50% 100%;
+  animation: best-btn-poyon 2.2s ease-in-out 1.8s infinite;
+  will-change: transform;
+}
+@keyframes best-btn-poyon {
+  0%, 60%, 100% { transform: translateY(0)     scale(1,    1);    }
+  66%           { transform: translateY(0)     scale(1.14, .86);  } /* squash（しゃがむ） */
+  76%           { transform: translateY(-22%)  scale(.94,  1.06); } /* 跳躍ピーク（縦に伸びる） */
+  85%           { transform: translateY(0)     scale(1.08, .92);  } /* 着地（また少しつぶれる） */
+  91%           { transform: translateY(-6%)   scale(.98,  1.02); } /* 余韻の小バウンド */
+  96%           { transform: translateY(0)     scale(1,    1);    }
+}
+
+/* ============================================================
+   03. STORY  (1672 x 964.67)
+   ============================================================ */
+.s-story { background: var(--cream); aspect-ratio: 1672 / 964.67; }
+
+/* タイトル */
+.story-title { z-index: 5; display: flex; flex-direction: column; align-items: center; gap: calc(16/var(--design-w)*100cqi); text-align: center; }
+.story-label { font-family: "Fredoka", sans-serif; font-weight: 700; color: #E9171E; font-size: calc(50/var(--design-w)*100cqi); letter-spacing: .06em; }
+.story-head  { margin: 0; font-weight: 900; color: #452601; font-size: calc(70/var(--design-w)*100cqi); white-space: nowrap; line-height: 1.1; }
+
+/* 本文（フロー） */
+.story-body { z-index: 5; display: flex; flex-direction: column; gap: calc(20/var(--design-w)*100cqi); color: #4D2401; font-weight: 700; font-size: calc(30/var(--design-w)*100cqi); line-height: calc(40/var(--design-w)*100cqi); }
+.story-body p { margin: 0; }
+.story-body .pb-big { font-size: calc(45/var(--design-w)*100cqi); }
+.story-body .pb-red { color: #E9171E; }
+
+/* 写真フレーム（白枠＋茶の影） */
+.ph-shadow { z-index: 3; background: #D0B07B; border-radius: calc(30/var(--design-w)*100cqi); }
+.ph-frame  { z-index: 4; background: #fff; overflow: hidden; }
+.ph-frame img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; }
+
+/* ============================================================
+   03-anim. STORY アニメーション（in-view で発火）
+   ・左上ハンバーガーイラスト  : 常時ふわふわ揺れ（in-view 不要）
+   ・スタッフ写真／外観写真    : 下からフェードアップ
+   ・We're PEACE BURGER バブル : ズームイン（バウンスあり）
+   ・Since 2026 スタンプ      : ズームイン（バウンスあり）
+   ・本文テキスト             : 下から「ぬるり」と浮き上がり（マスク方式）
+   ============================================================ */
+
+/* ---- 左上ハンバーガー：常時ふわふわ + ほんのり回転 ---- */
+@keyframes s3-burger-bob {
+  0%, 100% { transform: translateY(0)                                   rotate(-2deg); }
+  25%      { transform: translateY(calc(-6/var(--design-w)*100cqi))     rotate(1deg); }
+  50%      { transform: translateY(calc(-10/var(--design-w)*100cqi))    rotate(2deg); }
+  75%      { transform: translateY(calc(-4/var(--design-w)*100cqi))     rotate(-1deg); }
+}
+.s3-deco-burger {
+  transform-origin: 50% 60%;
+  animation: s3-burger-bob 4.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* ---- 写真：下からフェードアップ（初期は非表示） ---- */
+.s-story[data-animate-on-view] .s3-fade-up {
+  opacity: 0;
+  transform: translateY(calc(40/var(--design-w)*100cqi));
+}
+.s-story.in-view .s3-fade-up {
+  animation: s3-fade-up .9s cubic-bezier(.22, 1, .36, 1) .2s both;
+}
+.s-story.in-view .s3-fade-up.s3-late {
+  animation-delay: .55s;
+}
+@keyframes s3-fade-up {
+  0%   { opacity: 0; transform: translateY(calc(40/var(--design-w)*100cqi)); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- バブル／スタンプ：ズームイン（バウンス） ---- */
+.s-story[data-animate-on-view] .s3-zoom-pop {
+  opacity: 0;
+  transform: scale(.3) rotate(-15deg);
+}
+.s-story.in-view .s3-zoom-pop {
+  animation: s3-zoom-pop .8s cubic-bezier(.34, 1.56, .64, 1) .8s both,
+             s3-zoom-wobble 4s ease-in-out 1.8s infinite;
+}
+.s-story.in-view .s3-zoom-pop.s3-late {
+  animation: s3-zoom-pop .8s cubic-bezier(.34, 1.56, .64, 1) 1.1s both,
+             s3-zoom-wobble 4s ease-in-out 2.1s infinite;
+}
+@keyframes s3-zoom-pop {
+  0%   { opacity: 0; transform: scale(.25) rotate(-20deg); }
+  60%  { opacity: 1; transform: scale(1.15) rotate(6deg); }
+  100% { opacity: 1; transform: scale(1)    rotate(0deg); }
+}
+/* 着地後のほんのり揺れ（注視を切らないため） */
+@keyframes s3-zoom-wobble {
+  0%, 100% { transform: scale(1)    rotate(0deg); }
+  50%      { transform: scale(1.04) rotate(-2deg); }
+}
+
+/* ---- 本文テキスト：matrix 方式で下からぬるりと浮き上がる ----
+   提案された手法を踏襲：
+     外側 <p>  = .bg-wrap 役（overflow:hidden のマスク／opacity 0→1）
+     内側 .inn = matrix(1,0,0,1,0,Y) で下に隠した本文／opacity 0→1
+   どちらも同じ duration / easing の transition で立ち上がるため、
+   外側もフェードしながら内側がスライドしてくる二重のフェードになり、
+   よりふわっと浮き上がる滑らかな印象になる。
+   transition-delay を :nth-child で振って段差表示する。 */
+
+/* 外側＝マスク、内側＝本文。どちらも block レイアウトでマスクが効くようにする */
+.s-story[data-text-rise] .story-body p,
+.s-story[data-text-rise] .story-body p .inn {
+  display: block;
+}
+
+/* 外側マスク：overflow:hidden ＋ opacity 0→1 */
+.s-story[data-text-rise] .story-body p {
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 内側本文：100px 相当（design-w で比例スケール）ぶん下に隠す */
+.s-story[data-text-rise] .story-body p .inn {
+  opacity: 0;
+  transform: translateY(calc(100 / var(--design-w) * 100cqi));
+  transition: 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 発火：セクションがビューに入ったら外側＆内側を同時に立ち上げる */
+.s-story.in-view .story-body p { opacity: 1; }
+.s-story.in-view .story-body p .inn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 段差表示：上の段落から順番に */
+.s-story.in-view .story-body p:nth-child(1),
+.s-story.in-view .story-body p:nth-child(1) .inn { transition-delay: .30s; }
+.s-story.in-view .story-body p:nth-child(2),
+.s-story.in-view .story-body p:nth-child(2) .inn { transition-delay: .55s; }
+.s-story.in-view .story-body p:nth-child(3),
+.s-story.in-view .story-body p:nth-child(3) .inn { transition-delay: .80s; }
+.s-story.in-view .story-body p:nth-child(4),
+.s-story.in-view .story-body p:nth-child(4) .inn { transition-delay: 1.05s; }
+
+/* モーション抑制：アニメ無効＆初期 opacity:0 を打ち消す */
+@media (prefers-reduced-motion: reduce) {
+  .s3-deco-burger,
+  .s-story[data-animate-on-view] .s3-fade-up,
+  .s-story[data-animate-on-view] .s3-zoom-pop,
+  .s-story[data-text-rise] .story-body p,
+  .s-story[data-text-rise] .story-body p .inn {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+  .s-story[data-text-rise] .story-body p { overflow: visible !important; }
+}
+
+/* ============================================================
+   04. SECRET（おいしい3つの秘密）  (1672 x 975)
+   ============================================================ */
+.s-secret { background: #FCCF18; aspect-ratio: 1672 / 975; }
+
+/* 上部 赤オーニング */
+.secret-awning {
+  position: absolute; top: calc(-10/var(--design-w)*100cqi); left: 0; width: 100%;
+  height: calc(72/var(--design-w)*100cqi);
+  background: url("assets/img/s4/59_red_awning_banner-clean.png") no-repeat top center;
+  background-size: 100% 100%;
+  z-index: 3;
+}
+
+/* タイトル */
+.secret-label {
+  position: absolute; top: calc(59/var(--design-w)*100cqi); left: 0; width: 100%;
+  text-align: center; z-index: 5;
+  color: #E9171E; font-family: "Fredoka", sans-serif; font-weight: 700;
+  font-size: calc(50/var(--design-w)*100cqi); letter-spacing: .08em;
+}
+.secret-head {
+  position: absolute; top: calc(150/var(--design-w)*100cqi); left: 0; width: 100%;
+  margin: 0; text-align: center; z-index: 5;
+  color: #452601; font-weight: 900; font-size: calc(100/var(--design-w)*100cqi);
+  line-height: 1; white-space: nowrap;
+}
+.secret-head .num { color: #E9171E; font-size: 1.5em; line-height: 1; }
+
+/* 3カラム（flex・レスポンシブ） */
+.secret-row {
+  position: absolute; top: calc(318/var(--design-w)*100cqi); left: 0; width: 100%;
+  display: flex; justify-content: center; align-items: flex-start;
+  gap: calc(40/var(--design-w)*100cqi);
+  padding: 0 calc(87/var(--design-w)*100cqi);
+  z-index: 4;
+}
+.secret-col { flex: 1 1 0; max-width: calc(473/var(--design-w)*100cqi); display: flex; flex-direction: column; align-items: center; gap: calc(16/var(--design-w)*100cqi); position: relative; }
+
+/* 写真（白枠＋傾き） */
+.col-photo {
+  position: relative; width: 100%;
+  max-width: calc(437/var(--design-w)*100cqi);  /* Figma同様：写真はカラム幅より小さく */
+  margin: 0 auto;
+  background: #fff; border-radius: calc(15/var(--design-w)*100cqi);
+  padding: calc(6/var(--design-w)*100cqi);
+  transform: rotate(-3deg);
+  box-shadow: 0 calc(8/var(--design-w)*100cqi) calc(20/var(--design-w)*100cqi) rgba(0,0,0,.2);
+}
+.col-img { width: 100%; aspect-ratio: 423 / 305; object-fit: cover; border-radius: calc(10/var(--design-w)*100cqi); display: block; }
+
+/* 番号バッジ（白リング＋赤丸） */
+.col-badge {
+  position: absolute; top: calc(-18/var(--design-w)*100cqi); left: calc(-18/var(--design-w)*100cqi);
+  width: calc(92/var(--design-w)*100cqi); height: calc(92/var(--design-w)*100cqi);
+  background: #fff; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; z-index: 5;
+  box-shadow: 0 calc(3/var(--design-w)*100cqi) calc(6/var(--design-w)*100cqi) rgba(0,0,0,.2);
+}
+.col-badge img { width: 86%; height: 86%; object-fit: contain; }
+
+/* Handmade! バナー（白角丸＋赤手書き） */
+.col-handmade {
+  position: absolute; left: calc(6/var(--design-w)*100cqi); bottom: calc(12/var(--design-w)*100cqi);
+  background: #fff; color: #E9171E;
+  font-family: "Caveat", cursive; font-weight: 700;
+  font-size: calc(36/var(--design-w)*100cqi); line-height: 1;
+  padding: calc(0/var(--design-w)*100cqi) calc(18/var(--design-w)*100cqi);
+  border-radius: calc(10/var(--design-w)*100cqi);
+  transform: rotate(-6deg); z-index: 6;
+  box-shadow: 0 calc(2/var(--design-w)*100cqi) calc(5/var(--design-w)*100cqi) rgba(0,0,0,.15);
+}
+
+/* タイトル・説明 */
+.col-title { margin: 0; color: #452601; font-weight: 900; font-size: calc(50/var(--design-w)*100cqi); letter-spacing: .04em; white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: calc(12/var(--design-w)*100cqi); }
+.col-title .title-mark { height: calc(42/var(--design-w)*100cqi); width: auto; flex: 0 0 auto; }
+.col-desc { margin: 0; color: #4D2401; font-weight: 700; font-size: calc(27/var(--design-w)*100cqi); line-height: 1.45; text-align: center; }
+
+/* ============================================================
+   04-anim. SECRET アニメーション（in-view で発火）
+   ・3カラム：下からスライドアップ＋わずかにスケール、左→中→右に順次
+   ・「3」  ：超ダイナミックにポップイン → 以降は「ぽよぽよ」収縮ループ
+   ============================================================ */
+
+/* ---- カラム：初期は非表示（右に隠れている） ---- */
+.s-secret[data-animate-on-view] .secret-col {
+  opacity: 0;
+  transform: translateX(calc(260 / var(--design-w) * 100cqi));
+}
+
+/* ---- カラム：右 → 左へスライドイン（ふんわり着地） ---- */
+@keyframes secret-col-slide-from-right {
+  0%   { opacity: 0; transform: translateX(calc(260 / var(--design-w) * 100cqi)); }
+  70%  { opacity: 1; transform: translateX(calc(-14 / var(--design-w) * 100cqi)); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+.s-secret.in-view .secret-col {
+  animation: secret-col-slide-from-right 1s cubic-bezier(.22, 1, .36, 1) both;
+  will-change: transform;
+}
+/* 2秒間隔で1枚ずつ。1枚目も 2 秒待機してからスタート。
+   発火順：2.0s → 4.0s → 6.0s（全部出揃うまで約7秒） */
+.s-secret.in-view .secret-col:nth-child(1) { animation-delay: 2s; }
+.s-secret.in-view .secret-col:nth-child(2) { animation-delay: 4s; }
+.s-secret.in-view .secret-col:nth-child(3) { animation-delay: 6s; }
+
+/* ---- 「3」：初期はゼロスケールで非表示 ---- */
+.s-secret[data-animate-on-view] .secret-head .num {
+  display: inline-block;     /* transform を効かせるため */
+  transform-origin: 50% 60%; /* 数字の中心っぽい位置で拡縮 */
+  opacity: 0;
+  transform: scale(0) rotate(-180deg);
+}
+
+/* ---- 「3」：ぐるりと登場 → そのあと「ぽよぽよ」収縮ループ ---- */
+@keyframes secret-num-pop {
+  0%   { opacity: 0; transform: scale(0)    rotate(-180deg); }
+  55%  { opacity: 1; transform: scale(1.55) rotate(20deg); }
+  72%  {              transform: scale(.85)  rotate(-8deg); }
+  86%  {              transform: scale(1.12) rotate(3deg); }
+  100% { opacity: 1; transform: scale(1)    rotate(0deg); }
+}
+/* 静止 → ぽよん → ぽよん → 静止 を繰り返す（半分は休む＝注視させない） */
+@keyframes secret-num-poyo {
+  0%, 45%, 100% { transform: scale(1)    rotate(0deg); }
+  55%           { transform: scale(1.20) rotate(-3deg); }
+  65%           { transform: scale(.90)  rotate(2deg); }
+  75%           { transform: scale(1.10) rotate(-1deg); }
+  85%           { transform: scale(.96)  rotate(0deg); }
+}
+.s-secret.in-view .secret-head .num {
+  animation:
+    secret-num-pop  1.0s cubic-bezier(.34, 1.56, .64, 1) .3s both,
+    secret-num-poyo 2.6s ease-in-out 1.5s infinite;
+  will-change: transform;
+}
+
+/* モーション抑制：すべて停止して素の表示に */
+@media (prefers-reduced-motion: reduce) {
+  .s-secret[data-animate-on-view] .secret-col,
+  .s-secret[data-animate-on-view] .secret-head .num {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}
+
+/* ============================================================
+   05. SUNDAY MENU  (1672 x 1012.6)
+   ============================================================ */
+.s-menu { background: #FCF0D3; aspect-ratio: 1672 / 1012.6; }
+
+/* オーニング */
+.menu-awning {
+  position: absolute; top: calc(-10/var(--design-w)*100cqi); left: 0; width: 100%;
+  height: calc(60/var(--design-w)*100cqi);
+  background: url("assets/img/s4/59_red_awning_banner-clean.png") no-repeat top center;
+  background-size: 100% 100%; z-index: 3;
+}
+
+/* ヘッダー */
+.menu-ribbon { z-index: 5; object-fit: contain; }
+.menu-title {
+  position: absolute; top: calc(212/var(--design-w)*100cqi); left: 0; width: 100%;
+  text-align: center; z-index: 5; line-height: 1;
+  color: #452601; font-weight: 900; font-size: calc(48/var(--design-w)*100cqi); letter-spacing: .15em;
+}
+.menu-badge {
+  position: absolute; z-index: 6;
+  left: calc(81/var(--design-w)*100cqi); top: calc(184/var(--design-w)*100cqi);
+  width: calc(193/var(--design-w)*100cqi); height: calc(148/var(--design-w)*100cqi);
+  transform: rotate(-8deg);
+}
+
+/* メニューグリッド */
+.menu-grid {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  top: calc(284/var(--design-w)*100cqi);
+  width: calc(1360/var(--design-w)*100cqi);
+  display: flex; flex-direction: column; gap: calc(24/var(--design-w)*100cqi); z-index: 4;
+}
+.menu-cards { display: grid; grid-template-columns: 1fr 1fr; gap: calc(22/var(--design-w)*100cqi); }
+
+/* メニューカード */
+.menu-card {
+  display: flex; align-items: center; gap: calc(14/var(--design-w)*100cqi);
+  background: #FCF4E0; border-radius: calc(29/var(--design-w)*100cqi);
+  padding: calc(16/var(--design-w)*100cqi);
+  box-shadow: calc(-9/var(--design-w)*100cqi) calc(9/var(--design-w)*100cqi) 0 #CDAF87;
+}
+.mc-photo { flex: 0 0 auto; width: calc(264/var(--design-w)*100cqi); height: calc(220/var(--design-w)*100cqi); border-radius: calc(16/var(--design-w)*100cqi); overflow: hidden; }
+.mc-photo img { width: 100%; height: 100%; object-fit: cover; }
+.mc-body { flex: 1 1 auto; min-width: 0; }
+.mc-name { font-family: "Kameron", serif; font-weight: 700; color: #4D2401; font-size: calc(46/var(--design-w)*100cqi); line-height: 1.05; }
+.mc-kana { color: #E9171E; font-weight: 900; font-size: calc(20/var(--design-w)*100cqi); margin-top: calc(2/var(--design-w)*100cqi); }
+.mc-price { display: flex; align-items: center; gap: calc(8/var(--design-w)*100cqi); color: #E9171E; font-weight: 700; margin: calc(6/var(--design-w)*100cqi) 0; }
+.mc-price .yen { font-size: calc(38/var(--design-w)*100cqi); }
+.mc-price .num { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: calc(56/var(--design-w)*100cqi); line-height: 1; }
+.mc-slash { height: calc(44/var(--design-w)*100cqi); width: auto; flex: 0 0 auto; }
+.mc-desc { color: #4D2401; font-weight: 700; font-size: calc(20/var(--design-w)*100cqi); line-height: 1.35; margin: 0; }
+
+/* SIDE MENU バー */
+.side-menu {
+  position: relative; display: flex; align-items: center; justify-content: space-around;
+  border: calc(6/var(--design-w)*100cqi) solid #E9171E; border-radius: calc(20/var(--design-w)*100cqi);
+  padding: calc(26/var(--design-w)*100cqi) calc(10/var(--design-w)*100cqi) calc(20/var(--design-w)*100cqi);
+}
+.side-tag {
+  position: absolute; top: calc(-19/var(--design-w)*100cqi); left: 50%; transform: translateX(-50%);
+  background: #E9171E; color: #FCF0D3; font-weight: 900; font-size: calc(28/var(--design-w)*100cqi); letter-spacing: .1em;
+  padding: calc(2/var(--design-w)*100cqi) calc(34/var(--design-w)*100cqi); border-radius: 999px; white-space: nowrap;
+}
+.side-item { display: flex; align-items: center; gap: calc(12/var(--design-w)*100cqi); flex: 1 1 0; justify-content: center; }
+.side-item + .side-item { border-left: calc(2/var(--design-w)*100cqi) dashed #CDAF87; }
+.si-icon { width: calc(82/var(--design-w)*100cqi); height: calc(100/var(--design-w)*100cqi); object-fit: contain; flex: 0 0 auto; }
+.si-icon--2 { display: flex; align-items: flex-end; width: auto; }
+.si-icon--2 img { width: calc(54/var(--design-w)*100cqi); height: calc(90/var(--design-w)*100cqi); object-fit: contain; }
+.si-name { font-weight: 900; color: #4D2401; font-size: calc(28/var(--design-w)*100cqi); letter-spacing: .06em; line-height: 1.1; }
+.si-price { color: #E9171E; font-weight: 700; font-size: calc(24/var(--design-w)*100cqi); line-height: 1.15; }
+.si-price .si-unit { color: #4D2401; font-size: calc(16/var(--design-w)*100cqi); margin-right: calc(4/var(--design-w)*100cqi); }
+.si-sub { color: #4D2401; font-weight: 700; font-size: calc(14/var(--design-w)*100cqi); line-height: 1.3; }
+
+/* ============================================================
+   05-anim. SUNDAY MENU アニメーション
+   ・装飾アイコン：常時のさりげない動きで「華やかさ」を出す
+     - twinkle / flash / pulse / bob / sway / spin / badge-bobble など
+     - それぞれ周期や位相を散らして同期しないようにする
+   ・メニューカード：マウスホバーで全体が大きく表示される
+     - 写真・名前・価格・説明文がそのままスケール
+     - 影をリッチにして「持ち上がる」感を強調
+     - 写真は更にもう一段ズームして奥行きを演出
+   ============================================================ */
+
+/* ---- ① キラッと光る（星：拡縮 + 軽い回転 + 透過） ---- */
+@keyframes s5-twinkle {
+  0%, 100% { transform: scale(1)    rotate(0deg);  opacity: 1; }
+  50%      { transform: scale(1.18) rotate(10deg); opacity: .55; }
+}
+.s5-twinkle    { animation: s5-twinkle 3.2s ease-in-out infinite; transform-origin: 50% 50%; }
+.s5-twinkle-sm { animation: s5-twinkle 2.4s ease-in-out infinite .6s; transform-origin: 50% 50%; }
+/* flip-x の星には scaleX(-1) を保持したまま twinkle させる */
+@keyframes s5-twinkle-flip {
+  0%, 100% { transform: scaleX(-1) scale(1)    rotate(0deg);  opacity: 1; }
+  50%      { transform: scaleX(-1) scale(1.18) rotate(10deg); opacity: .55; }
+}
+.s5-twinkle-flip { animation: s5-twinkle-flip 3.2s ease-in-out infinite 1.1s; transform-origin: 50% 50%; }
+
+/* ---- ② 雷：時々パッと光って跳ねる ---- */
+@keyframes s5-flash {
+  0%, 86%, 100% { transform: scale(1)    rotate(0deg);  opacity: .95; }
+  88%           { transform: scale(1.25) rotate(-8deg); opacity: 1;   }
+  91%           { transform: scale(.95)  rotate(4deg);  opacity: .85; }
+  94%           { transform: scale(1.15) rotate(-3deg); opacity: 1;   }
+  97%           { transform: scale(1)    rotate(0deg);  opacity: .9;  }
+}
+.s5-flash { animation: s5-flash 4.2s ease-in-out infinite; transform-origin: 50% 50%; }
+
+/* ---- ③ ドット模様：呼吸するように脈動 ---- */
+@keyframes s5-pulse {
+  0%, 100% { transform: scale(1);   opacity: 1;   }
+  50%      { transform: scale(.92); opacity: .65; }
+}
+.s5-pulse { animation: s5-pulse 3.6s ease-in-out infinite; transform-origin: 50% 50%; }
+
+/* ---- ④ 星ペア：上下にふわふわ + 軽い回転 ---- */
+@keyframes s5-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(calc(-10/var(--design-w)*100cqi)) rotate(-7deg); }
+}
+.s5-bob { animation: s5-bob 2.8s ease-in-out infinite; transform-origin: 50% 50%; }
+
+/* ---- ⑤ 波線：傾き(47.06deg)を保持したまま左右にスイング ---- */
+@keyframes s5-sway-wave {
+  0%, 100% { transform: rotate(47.06deg) translateY(0); }
+  50%      { transform: rotate(53deg)    translateY(calc(-4/var(--design-w)*100cqi)); }
+}
+.s5-sway-wave { animation: s5-sway-wave 3.4s ease-in-out infinite; transform-origin: 50% 50%; }
+
+/* ---- ⑥ 手描き矢印：傾き(41.28deg)を保持したまま角度を振る ---- */
+@keyframes s5-sway-arrow {
+  0%, 100% { transform: rotate(41.28deg); }
+  50%      { transform: rotate(52deg); }
+}
+.s5-sway-arrow { animation: s5-sway-arrow 2.6s ease-in-out infinite .3s; transform-origin: 20% 80%; }
+
+/* ---- ⑦ スターバースト：ゆっくり回転 + 脈動 ---- */
+@keyframes s5-spin {
+  0%   { transform: rotate(0deg)   scale(1);    }
+  50%  { transform: rotate(180deg) scale(1.08); }
+  100% { transform: rotate(360deg) scale(1);    }
+}
+.s5-spin { animation: s5-spin 9s linear infinite; transform-origin: 50% 50%; }
+
+/* ---- ⑧ 1番人気バッジ：回転(-8deg)を保持したまま、ぴょこぴょこ揺れる ---- */
+@keyframes s5-badge-bobble {
+  0%, 100% { transform: rotate(-8deg)  scale(1);    }
+  50%      { transform: rotate(-13deg) scale(1.07); }
+}
+.s5-badge-bobble { animation: s5-badge-bobble 2.4s ease-in-out infinite; transform-origin: 50% 50%; }
+
+/* ============================================================
+   05-hover. MENU カードのホバー演出（その場で大きくなる）
+   ・マウスを乗せると、カードがその場でグッと拡大される
+     （位置はグリッドに留まり、隣のカードに重ねて手前に出る）
+   ・写真は内側でさらにもう一段ズームして奥行きを演出
+   ・影を厚くして「浮き上がる」立体感
+   ・端のカードが画面外にはみ出にくいよう、列ごとに
+     transform-origin をずらして「中央寄りに広がる」ようにする
+   ============================================================ */
+.menu-card {
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+  transition:
+    transform        .45s cubic-bezier(.22, 1, .36, 1),
+    box-shadow       .45s cubic-bezier(.22, 1, .36, 1),
+    background-color .3s  ease;
+}
+
+/* 拡大の起点を「カード内側寄り」にしておくと、左右端のカードが
+   セクションの外にはみ出にくくなる */
+.menu-card:nth-child(odd)  { transform-origin: 30% 50%; } /* 左列：右に向かって広がる */
+.menu-card:nth-child(even) { transform-origin: 70% 50%; } /* 右列：左に向かって広がる */
+
+.menu-card .mc-photo img {
+  transition: transform .6s cubic-bezier(.22, 1, .36, 1);
+}
+
+/* ホバー時：その場で 1.18 倍に拡大（前回 1.07 より大きく）＋
+   軽く持ち上げて、影を厚くして「ふっ」と浮き上がる */
+.menu-card:hover {
+  transform: translateY(calc(-6/var(--design-w)*100cqi)) scale(1.18);
+  z-index: 10;
+  background: #FFFAEA;
+  box-shadow:
+    /* 既存ブロック影を強める */
+    calc(-16/var(--design-w)*100cqi) calc(18/var(--design-w)*100cqi) 0 #CDAF87,
+    /* 加えてふんわりした浮遊影 */
+    0 calc(24/var(--design-w)*100cqi) calc(48/var(--design-w)*100cqi) rgba(80, 36, 0, .22);
+}
+/* 写真はカード scale 1.18 ×さらに 1.08 = 約 1.27 倍の見え方
+   → 写真にグッと吸い込まれる印象になる */
+.menu-card:hover .mc-photo img {
+  transform: scale(1.08);
+}
+
+/* タッチ端末（hover 無し）では押下時に同じ拡大効果 */
+@media (hover: none) {
+  .menu-card:active {
+    transform: translateY(calc(-4/var(--design-w)*100cqi)) scale(1.12);
+    z-index: 10;
+  }
+}
+
+/* モーション抑制：装飾アニメ＆ホバー拡大演出を停止 */
+@media (prefers-reduced-motion: reduce) {
+  .s5-twinkle, .s5-twinkle-sm, .s5-twinkle-flip,
+  .s5-flash, .s5-pulse, .s5-bob,
+  .s5-sway-wave, .s5-sway-arrow,
+  .s5-spin, .s5-badge-bobble {
+    animation: none !important;
+  }
+  .menu-card, .menu-card .mc-photo img { transition: none !important; }
+  .menu-card:hover { transform: none !important; }
+  .menu-card:hover .mc-photo img { transform: none !important; }
+}
+
+/* ============================================================
+   06. AT NIGHT（ヨルは、イタリアンバルへ）  (1672 x 946)
+   ============================================================ */
+.s-night { background: #582600; aspect-ratio: 1672 / 946; }
+
+/* タイトル */
+.night-title { z-index: 5; display: flex; flex-direction: column; align-items: center; gap: calc(16/var(--design-w)*100cqi); text-align: center; }
+.night-label { font-family: "Fredoka", sans-serif; font-weight: 700; color: #FDC503; font-size: calc(60/var(--design-w)*100cqi); letter-spacing: .08em; }
+.night-head  { margin: 0; font-weight: 900; color: #FCF4E0; font-size: calc(100/var(--design-w)*100cqi); white-space: nowrap; line-height: 1; }
+
+/* 本文 */
+.night-text { z-index: 5; display: flex; flex-direction: column; gap: calc(24/var(--design-w)*100cqi); color: #fff; font-weight: 700; font-size: calc(27/var(--design-w)*100cqi); line-height: calc(40/var(--design-w)*100cqi); }
+.night-text p { margin: 0; }
+
+/* 営業時間（手書き風の下線2本） */
+.night-hours { z-index: 5; }
+.night-hours .nh-txt {
+  display: inline-block; color: #fff; font-family: "Fredoka", sans-serif; font-weight: 700;
+  font-size: calc(44/var(--design-w)*100cqi); line-height: 1.05; letter-spacing: .02em; transform: rotate(-4deg);
+}
+.night-hours .nh-line {
+  position: absolute; height: calc(3/var(--design-w)*100cqi);
+  background: rgba(252,244,224,.85); border-radius: 999px;
+}
+.night-hours .nh-l1 { left: calc(8/var(--design-w)*100cqi);   top: calc(61/var(--design-w)*100cqi); width: calc(410/var(--design-w)*100cqi); transform: rotate(-7.7deg); }
+.night-hours .nh-l2 { left: calc(112/var(--design-w)*100cqi); top: calc(55/var(--design-w)*100cqi); width: calc(290/var(--design-w)*100cqi); transform: rotate(-9.5deg); }
+
+/* ブランド名 */
+.night-brand { z-index: 5; display: flex; align-items: center; justify-content: center; gap: calc(18/var(--design-w)*100cqi); color: #FCF4E0; font-weight: 900; font-size: calc(80/var(--design-w)*100cqi); white-space: nowrap; line-height: 1; }
+.night-brand .brand-mark { height: calc(48/var(--design-w)*100cqi); width: auto; }
+
+/* 外観写真（白枠・傾き） */
+.night-photo { z-index: 3; background: #fff; border-radius: calc(20/var(--design-w)*100cqi); overflow: hidden; transform: rotate(-2.3deg); padding: calc(11/var(--design-w)*100cqi); box-shadow: 0 calc(10/var(--design-w)*100cqi) calc(28/var(--design-w)*100cqi) rgba(0,0,0,.35); }
+.night-photo img { width: 100%; height: 100%; object-fit: cover; border-radius: calc(10/var(--design-w)*100cqi); display: block; }
+
+/* OPEN看板（火-日に補正済みアセット） */
+.night-open { z-index: 6; transform: rotate(-3.84deg); object-fit: contain; }
+
+/* ============================================================
+   06-anim. AT NIGHT アニメーション
+   ・赤枠：AT NIGHT ラベル → 見出し（クリップで左→右にスムーズ反復）
+           → 波線（同じく左→右に描き出される）
+   ・緑枠：本文 3 段落をタイプライターで順次出現（タイトル後に開始）
+   ・青枠：月のグロー、星のキラめき、ワイン/ビールの乾杯、
+           OPEN 看板の振り子、葉の揺らぎ等を散らして「夜の華やかさ」
+   ・写真：フェードイン後、ふんわり浮遊（-2.3°回転保持）
+   ============================================================ */
+
+/* ---- 赤枠：AT NIGHT ラベル（軽くフェード+下→上） ---- */
+.s-night[data-animate-on-view] .night-label {
+  opacity: 0;
+  transform: translateY(calc(-12/var(--design-w)*100cqi));
+}
+.s-night.in-view .night-label {
+  animation: s6-label-in .8s cubic-bezier(.22, 1, .36, 1) .15s both;
+}
+@keyframes s6-label-in {
+  0%   { opacity: 0; transform: translateY(calc(-12/var(--design-w)*100cqi)); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- 赤枠：見出し「ヨルは、イタリアンバルへ」
+        clip-path を左→右にスムーズ解除して「なめらかな表示」 ---- */
+.s-night[data-animate-on-view] .night-head {
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  -webkit-clip-path: inset(0 100% 0 0);
+}
+.s-night.in-view .night-head {
+  animation: s6-head-wipe 1.4s cubic-bezier(.22, 1, .36, 1) .45s both;
+}
+@keyframes s6-head-wipe {
+  0%   { opacity: 0; clip-path: inset(0 100% 0 0); -webkit-clip-path: inset(0 100% 0 0); }
+  15%  { opacity: 1; }
+  100% { opacity: 1; clip-path: inset(0 0 0 0); -webkit-clip-path: inset(0 0 0 0); }
+}
+
+/* ---- 赤枠：見出し下の波線（同じく左→右に描き出される） ---- */
+.s-night[data-animate-on-view] .s6-wave {
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  -webkit-clip-path: inset(0 100% 0 0);
+}
+.s-night.in-view .s6-wave {
+  animation: s6-wave-draw 1.1s cubic-bezier(.22, 1, .36, 1) 1.1s both;
+}
+@keyframes s6-wave-draw {
+  0%   { opacity: 0; clip-path: inset(0 100% 0 0); -webkit-clip-path: inset(0 100% 0 0); }
+  25%  { opacity: 1; }
+  100% { opacity: 1; clip-path: inset(0 0 0 0); -webkit-clip-path: inset(0 0 0 0); }
+}
+
+/* ---- 緑枠：本文タイプライター（カーソル色はクリーム白に） ---- */
+.night-text .tw-cursor { background: #FCF4E0; }
+
+/* =============== 青枠：装飾アニメーション =============== */
+
+/* 月：金色のグローと、ゆっくり上下に呼吸 */
+@keyframes s6-moon-glow {
+  0%, 100% {
+    transform: translateY(0);
+    filter: drop-shadow(0 0 calc(6/var(--design-w)*100cqi)  rgba(253, 197, 3, .30));
+  }
+  50% {
+    transform: translateY(calc(-5/var(--design-w)*100cqi));
+    filter: drop-shadow(0 0 calc(16/var(--design-w)*100cqi) rgba(253, 197, 3, .70));
+  }
+}
+.s6-moon { animation: s6-moon-glow 5s ease-in-out infinite; transform-origin: 50% 50%; }
+
+/* 星：拡縮+回転+グロー = キラッと光る */
+@keyframes s6-twinkle {
+  0%, 100% { transform: scale(1)    rotate(0deg);  opacity: 1;
+             filter: drop-shadow(0 0 calc(2/var(--design-w)*100cqi) rgba(255,230,120,0)); }
+  50%      { transform: scale(1.18) rotate(10deg); opacity: .55;
+             filter: drop-shadow(0 0 calc(8/var(--design-w)*100cqi) rgba(255,230,120,.7)); }
+}
+.s6-twinkle    { animation: s6-twinkle 3.0s ease-in-out infinite;        transform-origin: 50% 50%; }
+.s6-twinkle-b  { animation: s6-twinkle 2.6s ease-in-out infinite .5s;    transform-origin: 50% 50%; }
+.s6-twinkle-c  { animation: s6-twinkle 2.8s ease-in-out infinite .3s;    transform-origin: 50% 50%; }
+.s6-twinkle-d  { animation: s6-twinkle 3.2s ease-in-out infinite .9s;    transform-origin: 50% 50%; }
+.s6-twinkle-e  { animation: s6-twinkle 2.4s ease-in-out infinite 1.2s;   transform-origin: 50% 50%; }
+/* flip-x 状態を保ったまま twinkle するための専用キーフレーム */
+@keyframes s6-twinkle-flip {
+  0%, 100% { transform: scaleX(-1) scale(1)    rotate(0deg);   opacity: 1;
+             filter: drop-shadow(0 0 calc(2/var(--design-w)*100cqi) rgba(255,230,120,0)); }
+  50%      { transform: scaleX(-1) scale(1.18) rotate(-10deg); opacity: .55;
+             filter: drop-shadow(0 0 calc(8/var(--design-w)*100cqi) rgba(255,230,120,.7)); }
+}
+.s6-twinkle-flip { animation: s6-twinkle-flip 3s ease-in-out infinite 1.6s; transform-origin: 50% 50%; }
+
+/* ドット模様：呼吸する脈動 */
+@keyframes s6-pulse {
+  0%, 100% { opacity: 1;  transform: scale(1);   }
+  50%      { opacity: .6; transform: scale(.93); }
+}
+.s6-pulse { animation: s6-pulse 3.4s ease-in-out infinite; transform-origin: 50% 50%; }
+
+/* サンバースト系：脈動+わずかに回転 */
+@keyframes s6-rays-pulse {
+  0%, 100% { opacity: 1;   transform: scale(1)    rotate(0deg); }
+  50%      { opacity: .55; transform: scale(1.06) rotate(4deg); }
+}
+.s6-rays   { animation: s6-rays-pulse 3.6s ease-in-out infinite;     transform-origin: 50% 50%; }
+.s6-rays-2 { animation: s6-rays-pulse 2.8s ease-in-out infinite .7s; transform-origin: 50% 50%; }
+
+/* ワイングラス：乾杯のように軽く傾ける（基準角 -6.88deg を保持） */
+@keyframes s6-wine-tilt {
+  0%, 100% { transform: rotate(-6.88deg); }
+  50%      { transform: rotate(-2deg); }
+}
+.s6-wine { animation: s6-wine-tilt 4s ease-in-out infinite; transform-origin: 50% 90%; }
+
+/* ビアジョッキ：乾杯の動き */
+@keyframes s6-beer-tilt {
+  0%, 100% { transform: rotate(0deg); }
+  30%      { transform: rotate(8deg); }
+  60%      { transform: rotate(-3deg); }
+}
+.s6-beer { animation: s6-beer-tilt 4s ease-in-out infinite; transform-origin: 50% 85%; }
+
+/* 葉：優しく揺れる */
+@keyframes s6-leaf-sway {
+  0%, 100% { transform: rotate(0deg)  translateY(0); }
+  50%      { transform: rotate(-7deg) translateY(calc(-3/var(--design-w)*100cqi)); }
+}
+.s6-leaf { animation: s6-leaf-sway 3.5s ease-in-out infinite; transform-origin: 50% 100%; }
+
+/* 渦巻き：そっと漂う */
+@keyframes s6-swirl-drift {
+  0%, 100% { transform: translateX(0)                                rotate(0deg); }
+  50%      { transform: translateX(calc(6/var(--design-w)*100cqi))   rotate(3deg); }
+}
+.s6-swirl { animation: s6-swirl-drift 4.5s ease-in-out infinite; }
+
+/* OPEN 看板：上から吊るされている振り子 */
+@keyframes s6-open-swing {
+  0%, 100% { transform: rotate(-3.84deg); }
+  25%      { transform: rotate(-8deg); }
+  50%      { transform: rotate(-3.84deg); }
+  75%      { transform: rotate(0.5deg); }
+}
+.s6-open {
+  transform-origin: 50% 5%;   /* 上端を吊り点に */
+  animation: s6-open-swing 4.2s ease-in-out infinite;
+}
+
+/* =============== 写真：登場フェード + 浮遊 =============== */
+.s-night[data-animate-on-view] .s6-photo {
+  opacity: 0;
+  transform: rotate(-2.3deg) scale(.94) translateY(calc(20/var(--design-w)*100cqi));
+}
+@keyframes s6-photo-in {
+  0%   { opacity: 0; transform: rotate(-2.3deg) scale(.94) translateY(calc(20/var(--design-w)*100cqi)); }
+  100% { opacity: 1; transform: rotate(-2.3deg) scale(1)   translateY(0); }
+}
+@keyframes s6-photo-float {
+  0%, 100% { transform: rotate(-2.3deg) translateY(0); }
+  50%      { transform: rotate(-2.3deg) translateY(calc(-6/var(--design-w)*100cqi)); }
+}
+.s-night.in-view .s6-photo {
+  animation:
+    s6-photo-in    1.0s cubic-bezier(.22, 1, .36, 1) .3s both,
+    s6-photo-float 5s ease-in-out 1.3s infinite;
+  will-change: transform;
+}
+
+/* モーション抑制：装飾アニメ＆登場演出を停止 */
+@media (prefers-reduced-motion: reduce) {
+  .s-night[data-animate-on-view] .night-label,
+  .s-night[data-animate-on-view] .night-head,
+  .s-night[data-animate-on-view] .s6-wave,
+  .s-night[data-animate-on-view] .s6-photo {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    -webkit-clip-path: none !important;
+    animation: none !important;
+  }
+  .s6-moon, .s6-twinkle, .s6-twinkle-b, .s6-twinkle-c, .s6-twinkle-d,
+  .s6-twinkle-e, .s6-twinkle-flip, .s6-pulse, .s6-rays, .s6-rays-2,
+  .s6-wine, .s6-beer, .s6-leaf, .s6-swirl, .s6-open {
+    animation: none !important;
+  }
+  /* 赤枠タイトルは基準の rotate を CSS に戻す */
+  .s-night[data-animate-on-view] .s6-photo { transform: rotate(-2.3deg) !important; }
+}
+
+/* ============================================================
+   07. ACCESS / FOOTER  (1672 x 988)
+   ============================================================ */
+.s-access { background: #FDC503; aspect-ratio: 1672 / 988; }
+
+/* 上部オーニング（前セクションとの繋ぎ） */
+.acc-awning {
+  position: absolute; top: calc(-10/var(--design-w)*100cqi); left: 0; width: 100%;
+  height: calc(60/var(--design-w)*100cqi);
+  background: url("assets/img/s4/59_red_awning_banner-clean.png") no-repeat top center;
+  background-size: 100% 100%; z-index: 7;
+}
+
+/* タイトル */
+.acc-title { z-index: 5; display: flex; flex-direction: column; align-items: center; gap: calc(16/var(--design-w)*100cqi); text-align: center; }
+.acc-eyebrow { font-family: "Fredoka", sans-serif; font-weight: 700; color: #E9171E; font-size: calc(50/var(--design-w)*100cqi); letter-spacing: .05em; line-height: 1; }
+.acc-head { margin: 0; font-weight: 900; color: #4D2401; font-size: calc(80/var(--design-w)*100cqi); line-height: 1; white-space: nowrap; }
+
+/* 店舗情報カード */
+.acc-card {
+  z-index: 4; background: #FDF2D8; border: calc(4/var(--design-w)*100cqi) solid #0D0D0D;
+  border-radius: calc(20/var(--design-w)*100cqi);
+  padding: calc(14/var(--design-w)*100cqi) calc(28/var(--design-w)*100cqi);
+}
+.acc-card-head { font-weight: 700; color: #482301; font-size: calc(40/var(--design-w)*100cqi); line-height: 1; text-align: center; letter-spacing: .01em; }
+.acc-card-sub { font-weight: 700; color: #4D2401; font-size: calc(20/var(--design-w)*100cqi); line-height: 1.15; text-align: center; margin-top: calc(3/var(--design-w)*100cqi); padding-bottom: calc(6/var(--design-w)*100cqi); border-bottom: 1px solid rgba(77,36,1,.4); }
+.acc-info { width: 100%; border-collapse: collapse; color: #4D2401; font-weight: 700; line-height: 1.18; }
+.acc-info td { border-bottom: 1px solid rgba(77,36,1,.4); padding: calc(2.5/var(--design-w)*100cqi) 0; vertical-align: middle; }
+.acc-info tr.last td { border-bottom: 0; }
+.acc-info .ai { width: calc(44/var(--design-w)*100cqi); }
+.acc-info .ai img { width: calc(26/var(--design-w)*100cqi); height: auto; }
+.acc-info .al { width: calc(186/var(--design-w)*100cqi); font-size: calc(19/var(--design-w)*100cqi); white-space: nowrap; }
+.acc-info .al small { display: block; font-size: calc(14/var(--design-w)*100cqi); font-weight: 700; line-height: 1.05; }
+.acc-info .av { border-left: 1px solid rgba(77,36,1,.4); padding-left: calc(12/var(--design-w)*100cqi); font-size: calc(18/var(--design-w)*100cqi); line-height: 1.25; }
+
+/* Googleマップ */
+.acc-map { z-index: 4; background: #FDF2D8; border: calc(4/var(--design-w)*100cqi) solid #0D0D0D; border-radius: calc(20/var(--design-w)*100cqi); overflow: hidden; }
+.acc-map iframe { display: block; }
+
+/* 問い合わせ文 */
+.acc-inquiry { z-index: 5; display: flex; align-items: center; justify-content: center; gap: calc(14/var(--design-w)*100cqi); }
+.acc-inquiry p { margin: 0; font-family: "Noto Serif JP", serif; font-weight: 700; color: #0D0D0D; font-size: calc(30/var(--design-w)*100cqi); white-space: nowrap; }
+.acc-inquiry .acc-mark { height: calc(51/var(--design-w)*100cqi); width: auto; }
+
+/* CTA ボタン */
+.acc-cta { z-index: 5; display: flex; align-items: stretch; gap: calc(37/var(--design-w)*100cqi); }
+.cta {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  gap: calc(20/var(--design-w)*100cqi);
+  padding: 0 calc(28/var(--design-w)*100cqi);
+  border: calc(3/var(--design-w)*100cqi) solid #fff; border-radius: calc(24/var(--design-w)*100cqi);
+  color: #fff; transition: transform .15s ease, filter .15s ease;
+}
+.cta:hover { transform: translateY(calc(-3/var(--design-w)*100cqi)); filter: brightness(1.06); }
+.cta--tel  { background: #E9171E; }
+.cta--ig   { background: #5C2B02; }
+.cta--line { background: #269141; }
+.cta-ic { flex: none; display: flex; align-items: center; justify-content: center; }
+.cta-ic img { height: calc(82/var(--design-w)*100cqi); width: auto; }
+.cta-ic--ring { width: calc(82/var(--design-w)*100cqi); height: calc(82/var(--design-w)*100cqi); background: #fff; border-radius: 50%; }
+.cta-ic--ring img { height: calc(46/var(--design-w)*100cqi); }
+.cta-tx { display: flex; flex-direction: column; line-height: 1.15; }
+.cta-tx b { font-weight: 700; font-size: calc(45/var(--design-w)*100cqi); }
+.cta-tx span { font-weight: 700; font-size: calc(25/var(--design-w)*100cqi); }
+.cta-tx .ig-name { font-family: "Kameron", serif; font-style: italic; }
+.cta-tx .line-name { font-family: "Noto Serif JP", serif; }
+
+/* フッター帯 */
+.acc-footer { z-index: 3; background: #FDF2D8; }
+.acc-nav { z-index: 6; display: flex; align-items: center; justify-content: center; gap: calc(22/var(--design-w)*100cqi); }
+.acc-nav a { font-weight: 900; color: #4D2401; font-size: calc(45/var(--design-w)*100cqi); letter-spacing: .02em; }
+.acc-nav a:hover { color: #E9171E; }
+.acc-dot { width: calc(15/var(--design-w)*100cqi); height: calc(15/var(--design-w)*100cqi); border-radius: 50%; background: #4D2401; flex: none; }
+
+/* ============================================================
+   07-anim. ACCESS アニメーション（in-view で発火）
+   ・赤枠タイトル：ACCESS フェード → お店までの行き方 wipe-in
+                  → 波線 draw-in
+   ・店舗情報カード：左からスライドイン
+   ・Google マップ：右からスライドイン（カードと左右対称の登場）
+   ・Come visit us! ：勢いよくポップアップ
+   ・矢印：常時ふわふわ揺れて地図方向を指す
+   ・問い合わせ文：下からフェードアップ
+   ・CTA 3 ボタン：下から順次スライドアップ（電話 → IG → LINE）
+                   電話だけ常時ぽよぽよ脈動（来店連絡を促す）
+   ・装飾（星・ドット・フッターのバーガー/ポテト等）：常時の
+     さりげない動きで紙面に華やかさを残す
+   ============================================================ */
+
+/* ---- 赤枠タイトル：ACCESS ラベル ---- */
+.s-access[data-animate-on-view] .acc-eyebrow {
+  opacity: 0;
+  transform: translateY(calc(-12/var(--design-w)*100cqi));
+}
+.s-access.in-view .acc-eyebrow {
+  animation: s7-eyebrow-in .7s cubic-bezier(.22, 1, .36, 1) .15s both;
+}
+@keyframes s7-eyebrow-in {
+  0%   { opacity: 0; transform: translateY(calc(-12/var(--design-w)*100cqi)); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- 赤枠：見出し「お店までの行き方」（左→右 wipe で滑らか表示） ---- */
+.s-access[data-animate-on-view] .acc-head {
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  -webkit-clip-path: inset(0 100% 0 0);
+}
+.s-access.in-view .acc-head {
+  animation: s7-head-wipe 1.2s cubic-bezier(.22, 1, .36, 1) .4s both;
+}
+@keyframes s7-head-wipe {
+  0%   { opacity: 0; clip-path: inset(0 100% 0 0); -webkit-clip-path: inset(0 100% 0 0); }
+  15%  { opacity: 1; }
+  100% { opacity: 1; clip-path: inset(0 0 0 0); -webkit-clip-path: inset(0 0 0 0); }
+}
+
+/* ---- 赤枠：波線（同じく左→右で描き出される。-0.6°回転を保持） ---- */
+.s-access[data-animate-on-view] .s7-wave {
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  -webkit-clip-path: inset(0 100% 0 0);
+}
+.s-access.in-view .s7-wave {
+  animation: s7-wave-draw 1.0s cubic-bezier(.22, 1, .36, 1) .9s both;
+}
+@keyframes s7-wave-draw {
+  0%   { opacity: 0; clip-path: inset(0 100% 0 0); -webkit-clip-path: inset(0 100% 0 0); }
+  20%  { opacity: 1; }
+  100% { opacity: 1; clip-path: inset(0 0 0 0); -webkit-clip-path: inset(0 0 0 0); }
+}
+
+/* ---- 店舗カード：左からスライドイン ---- */
+.s-access[data-animate-on-view] .acc-card {
+  opacity: 0;
+  transform: translateX(calc(-80/var(--design-w)*100cqi));
+}
+.s-access.in-view .acc-card {
+  animation: s7-card-in 1.0s cubic-bezier(.22, 1, .36, 1) .6s both;
+}
+@keyframes s7-card-in {
+  0%   { opacity: 0; transform: translateX(calc(-80/var(--design-w)*100cqi)); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+/* ---- Google マップ：右からスライドイン（カードと左右対称） ---- */
+.s-access[data-animate-on-view] .acc-map {
+  opacity: 0;
+  transform: translateX(calc(80/var(--design-w)*100cqi));
+}
+.s-access.in-view .acc-map {
+  animation: s7-map-in 1.0s cubic-bezier(.22, 1, .36, 1) .8s both;
+}
+@keyframes s7-map-in {
+  0%   { opacity: 0; transform: translateX(calc(80/var(--design-w)*100cqi)); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+/* ---- Come visit us!：勢いよくポップアップ → ふわふわ揺らぎ ---- */
+.s-access[data-animate-on-view] .s7-come-visit {
+  opacity: 0;
+  transform: scale(.35) rotate(-12deg);
+}
+.s-access.in-view .s7-come-visit {
+  animation:
+    s7-cv-pop    1.0s cubic-bezier(.34, 1.56, .64, 1) 1.0s both,
+    s7-cv-wobble 4.5s ease-in-out 2.1s infinite;
+  transform-origin: 50% 60%;
+}
+@keyframes s7-cv-pop {
+  0%   { opacity: 0; transform: scale(.35) rotate(-12deg); }
+  60%  { opacity: 1; transform: scale(1.1)  rotate(5deg); }
+  100% { opacity: 1; transform: scale(1)    rotate(0deg); }
+}
+@keyframes s7-cv-wobble {
+  0%, 100% { transform: scale(1)    rotate(0deg); }
+  50%      { transform: scale(1.04) rotate(-2deg); }
+}
+
+/* ---- 矢印：常時ふんわり揺れて「地図はこっち」を示す ---- */
+@keyframes s7-arrow-bounce {
+  0%, 100% { transform: translate(0, 0)  rotate(0deg); }
+  50%      { transform: translate(calc(-3/var(--design-w)*100cqi),
+                                  calc(5/var(--design-w)*100cqi)) rotate(-2deg); }
+}
+.s7-arrow { animation: s7-arrow-bounce 1.8s ease-in-out infinite; transform-origin: 50% 0%; }
+
+/* ---- 問い合わせ文：下からフェードアップ ---- */
+.s-access[data-animate-on-view] .acc-inquiry {
+  opacity: 0;
+  transform: translateY(calc(18/var(--design-w)*100cqi));
+}
+.s-access.in-view .acc-inquiry {
+  animation: s7-inquiry-in .8s cubic-bezier(.22, 1, .36, 1) 1.4s both;
+}
+@keyframes s7-inquiry-in {
+  0%   { opacity: 0; transform: translateY(calc(18/var(--design-w)*100cqi)); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- CTA 3 ボタン：下から順次スライドアップ ---- */
+.s-access[data-animate-on-view] .acc-cta .cta {
+  opacity: 0;
+  transform: translateY(calc(30/var(--design-w)*100cqi));
+}
+@keyframes s7-cta-in {
+  0%   { opacity: 0; transform: translateY(calc(30/var(--design-w)*100cqi)); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+/* 電話ボタンは「来店連絡を促す」常時ぽよぽよ脈動を併走 */
+@keyframes s7-tel-pulse {
+  0%, 70%, 100% { transform: scale(1);    box-shadow: 0 0 0 0    rgba(233, 23, 30, .35); }
+  80%           { transform: scale(1.04); box-shadow: 0 0 0 calc(10/var(--design-w)*100cqi) rgba(233, 23, 30, .18); }
+  90%           { transform: scale(1);    box-shadow: 0 0 0 calc(16/var(--design-w)*100cqi) rgba(233, 23, 30, 0); }
+}
+.s-access.in-view .acc-cta .cta:nth-child(1) {
+  animation:
+    s7-cta-in   .7s cubic-bezier(.22, 1, .36, 1) 1.7s both,
+    s7-tel-pulse 2.6s ease-in-out 3.0s infinite;
+}
+.s-access.in-view .acc-cta .cta:nth-child(2) {
+  animation: s7-cta-in .7s cubic-bezier(.22, 1, .36, 1) 1.85s both;
+}
+.s-access.in-view .acc-cta .cta:nth-child(3) {
+  animation: s7-cta-in .7s cubic-bezier(.22, 1, .36, 1) 2.0s both;
+}
+
+/* =============== 装飾の常時アニメーション =============== */
+
+/* 共通 twinkle（星のキラめき） */
+@keyframes s7-twinkle {
+  0%, 100% { transform: scale(1)    rotate(0deg);  opacity: 1;   }
+  50%      { transform: scale(1.18) rotate(10deg); opacity: .55; }
+}
+.s7-twinkle   { animation: s7-twinkle 3.0s ease-in-out infinite;        transform-origin: 50% 50%; }
+.s7-twinkle-b { animation: s7-twinkle 2.6s ease-in-out infinite .5s;    transform-origin: 50% 50%; }
+.s7-twinkle-c { animation: s7-twinkle 3.4s ease-in-out infinite 1.0s;   transform-origin: 50% 50%; }
+.s7-star-cr   { animation: s7-twinkle 2.8s ease-in-out infinite .3s;    transform-origin: 50% 50%; }
+.s7-star-cr-b { animation: s7-twinkle 3.2s ease-in-out infinite .8s;    transform-origin: 50% 50%; }
+/* flip-x を維持して twinkle */
+@keyframes s7-twinkle-flip {
+  0%, 100% { transform: scaleX(-1) scale(1)    rotate(0deg);   opacity: 1;   }
+  50%      { transform: scaleX(-1) scale(1.18) rotate(-10deg); opacity: .55; }
+}
+.s7-star-cr-flip { animation: s7-twinkle-flip 3s ease-in-out infinite 1.3s; transform-origin: 50% 50%; }
+
+/* 赤いドット模様：呼吸 */
+@keyframes s7-pulse {
+  0%, 100% { opacity: 1;  transform: scale(1);   }
+  50%      { opacity: .6; transform: scale(.93); }
+}
+.s7-dots-pulse { animation: s7-pulse 3.4s ease-in-out infinite; transform-origin: 50% 50%; }
+
+/* ---- フッター帯：バーガー＆ポテトがふわふわ、星はキラリ ---- */
+@keyframes s7-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(calc(-5/var(--design-w)*100cqi)); }
+}
+.s7-foot-burger { animation: s7-bob 3.5s ease-in-out infinite;       transform-origin: 50% 100%; }
+
+/* ポテトは rotate(20deg) を保持しつつ上下に揺らす */
+@keyframes s7-fries-bob {
+  0%, 100% { transform: rotate(20deg) translateY(0); }
+  50%      { transform: rotate(20deg) translateY(calc(-5/var(--design-w)*100cqi)); }
+}
+.s7-foot-fries { animation: s7-fries-bob 3.5s ease-in-out infinite .4s; transform-origin: 50% 100%; }
+
+/* インパクト線（金）：脈動 */
+.s7-foot-impact   { animation: s7-pulse 2.6s ease-in-out infinite;     transform-origin: 50% 50%; }
+@keyframes s7-pulse-flip {
+  0%, 100% { transform: scaleX(-1) scale(1);    opacity: 1;  }
+  50%      { transform: scaleX(-1) scale(.92);  opacity: .6; }
+}
+.s7-foot-impact-l { animation: s7-pulse-flip 2.6s ease-in-out infinite .4s; transform-origin: 50% 50%; }
+
+/* フッター星：twinkle（位相をずらす） */
+.s7-foot-star    { animation: s7-twinkle 3.0s ease-in-out infinite .2s; transform-origin: 50% 50%; }
+.s7-foot-star-sm { animation: s7-twinkle 2.4s ease-in-out infinite 1.4s; transform-origin: 50% 50%; }
+
+/* モーション抑制：装飾アニメ＆登場演出を停止 */
+@media (prefers-reduced-motion: reduce) {
+  .s-access[data-animate-on-view] .acc-eyebrow,
+  .s-access[data-animate-on-view] .acc-head,
+  .s-access[data-animate-on-view] .s7-wave,
+  .s-access[data-animate-on-view] .acc-card,
+  .s-access[data-animate-on-view] .acc-map,
+  .s-access[data-animate-on-view] .s7-come-visit,
+  .s-access[data-animate-on-view] .acc-inquiry,
+  .s-access[data-animate-on-view] .acc-cta .cta {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    -webkit-clip-path: none !important;
+    animation: none !important;
+  }
+  .s7-arrow, .s7-twinkle, .s7-twinkle-b, .s7-twinkle-c,
+  .s7-star-cr, .s7-star-cr-b, .s7-star-cr-flip,
+  .s7-dots-pulse, .s7-foot-burger, .s7-foot-fries,
+  .s7-foot-impact, .s7-foot-impact-l,
+  .s7-foot-star, .s7-foot-star-sm {
+    animation: none !important;
+  }
+  /* 波線は基準の rotate(-0.6deg) を維持 */
+  .s-access[data-animate-on-view] .s7-wave { transform: rotate(-0.6deg) !important; }
+}
+
+/* ============================================================
+   MOBILE LAYOUT  (≤768px) — セクション1
+   PC は 1672px 基準の絶対配置。モバイルでは縦積みフローへ。
+   ・装飾(.deco)は原則非表示。ブランド図版だけ .mb-keep で残す
+   ・座標(--x/--y/--w)指定を解除して通常フローに戻す
+   ============================================================ */
+@media (max-width: 768px) {
+
+  body { -webkit-text-size-adjust: 100%; }
+  .canvas { max-width: 100%; }
+
+  /* セクションを縦積みフローへ */
+  .section {
+    aspect-ratio: auto !important;
+    height: auto !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 44px 20px;
+    overflow: hidden;
+  }
+  .section > * { max-width: 440px; }
+
+  /* 装飾は原則非表示 */
+  .deco { display: none; }
+  .deco[aria-hidden="true"], .hero-shadow { display: none !important; }
+
+  /* ブランドの図版見出しだけ表示 */
+  .deco.mb-keep {
+    display: block !important; position: static !important;
+    left: auto !important; top: auto !important; height: auto !important;
+    transform: none !important; margin: 4px auto !important; width: 82%;
+  }
+  .deco.mb-keep.mb-full { width: 94%; }
+  .deco.mb-keep.mb-sm   { width: 46%; }
+
+  /* 座標指定の解除（共通） */
+  .tx, .btn, .hero-nav, .hero-photo, .flow, .hero-cta,
+  .best-frame, .best-ribbon,
+  .secret-label, .secret-head, .secret-row,
+  .menu-ribbon, .menu-title, .menu-grid,
+  .night-photo {
+    position: static !important;
+    left: auto !important; right: auto !important; top: auto !important;
+    width: 100% !important; height: auto !important;
+    transform: none !important;
+    margin: 0 auto !important;
+  }
+  .tx { font-size: 16px !important; line-height: 1.75; text-align: center; }
+
+  /* 写真 */
+  .hero-photo { border-radius: 14px !important; box-shadow: 0 6px 16px rgba(0,0,0,.22); }
+  .hero-photo img { width: 100% !important; height: auto !important; }
+
+  /* HERO 個別 */
+  .hero-nav { flex-direction: row; justify-content: center; gap: 14px; font-size: 15px; }
+  .hero-nav .sep { height: 16px !important; }
+  .hero-lead { font-size: 16px !important; line-height: 1.9; text-align: center; }
+  /* 2つのボタンを横並び、画面幅をシェアして表示 */
+  .hero-btns {
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: center;
+    gap: 12px !important;
+    margin: 0 !important;
+    width: 100%;
+    max-width: 440px;
+  }
+  .btn {
+    display: inline-flex !important;
+    flex: 1 1 0 !important;       /* 2つで均等に画面幅を分け合う */
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    padding: 14px 12px !important; /* 横方向の余白は少し詰めて文字が収まるように */
+    font-size: 16px !important;
+  }
+
+  /* ---------- 02 BEST SELLER ---------- */
+  .best-ribbon { width: auto !important; padding: 8px 22px !important; border-radius: 8px;
+    align-self: center; }
+  .best-ribbon span { font-size: 20px !important; }
+  .best-frame { max-width: 340px; height: auto !important; border-radius: 14px !important; box-shadow: 0 6px 16px rgba(0,0,0,.3); padding: 10px; }
+  .best-frame img { position: static !important; transform: none !important; width: 100% !important; height: auto !important; }
+  .best-title { text-align: center; font-size: 54px !important; line-height: .95 !important;
+    text-shadow: 0 4px 0 #4D2401 !important; }
+  .best-content { align-items: center !important; gap: 14px !important; text-align: center; }
+  .best-price { justify-content: center; font-size: 48px !important; }
+  .best-price .yen { font-size: 32px !important; }
+  .best-divider { width: 70% !important; }
+  .best-desc { font-size: 15px !important; text-align: center; }
+  .best-btn { font-size: 18px !important; padding: 13px 24px !important; }
+
+  /* ---------- 03 STORY ---------- */
+  .ph-shadow { display: none !important; }
+  .ph-frame {
+    position: static !important; left: auto !important; top: auto !important;
+    width: 100% !important; max-width: 340px; height: auto !important;
+    transform: none !important; margin: 0 auto !important;
+    /* モバイルでは白いフレーム（背景・余白・影）を消して画像のみ表示 */
+    background: transparent !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border-radius: 12px !important;
+  }
+  .ph-frame img { height: auto !important; object-position: center; border-radius: 12px !important; }
+  .story-label { font-size: 18px !important; }
+  .story-head  { font-size: 24px !important; white-space: normal !important; line-height: 1.3; }
+  .story-body  { font-size: 16px !important; line-height: 1.8 !important; gap: 14px !important; text-align: center; }
+  .story-body .pb-big { font-size: 20px !important; }
+
+  /* ---------- 04 SECRET ---------- */
+  .secret-awning { height: 20px !important; background-size: 100% 100% !important; }
+  .secret-label { font-size: 18px !important; margin: 6px 0 0 !important; }
+  .secret-head  { font-size: 30px !important; white-space: normal !important; }
+  .secret-head .num { font-size: 1.4em; }
+  .secret-row   { flex-direction: column !important; align-items: center; gap: 30px !important; padding: 0 !important; margin-top: 6px !important; }
+  .secret-col   { max-width: 340px !important; width: 100% !important; gap: 10px !important; }
+  .col-photo    { transform: rotate(-2deg); max-width: 300px !important; padding: 8px !important; }
+  .col-badge    { width: 58px !important; height: 58px !important; top: -14px !important; left: -10px !important; }
+  .col-handmade { font-size: 26px !important; }
+  .col-title    { font-size: 26px !important; }
+  .col-desc     { font-size: 15px !important; }
+
+  /* ---------- 05 MENU ---------- */
+  .menu-awning { height: 18px !important; background-size: 100% 100% !important; }
+  .menu-ribbon { width: 92% !important; max-width: 340px; height: 70px !important; margin: 6px auto 0 !important; }
+  .menu-title  { font-size: 28px !important; letter-spacing: .2em; margin: 4px 0 0 !important; }
+  .menu-badge  { display: none !important; }
+  .menu-grid   { width: 100% !important; gap: 16px !important; margin-top: 10px; }
+  .menu-cards  { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .menu-card   { padding: 12px !important; gap: 12px !important; box-shadow: -6px 6px 0 #CDAF87 !important; }
+  .mc-photo    { width: 112px !important; height: 96px !important; }
+  .mc-name     { font-size: 26px !important; }
+  .mc-kana     { font-size: 13px !important; }
+  .mc-price .yen { font-size: 24px !important; }
+  .mc-price .num { font-size: 34px !important; }
+  .mc-slash    { height: 26px !important; }
+  .mc-desc     { font-size: 13px !important; }
+  .side-menu   { flex-direction: column !important; align-items: stretch; gap: 0 !important; padding: 26px 16px 14px !important; border-width: 3px !important; }
+  .side-tag    { font-size: 18px !important; padding: 3px 26px !important; }
+  /* 各項目はアイコン＋テキストを中央寄せに、ギャップを十分とって被り防止 */
+  .side-item   { justify-content: center !important; padding: 14px 8px !important; gap: 14px !important; }
+  .side-item + .side-item { border-left: 0 !important; border-top: 2px dashed #CDAF87 !important; }
+  .si-icon     { width: 52px !important; height: 60px !important; flex-shrink: 0 !important; }
+  /* Alcohol 用の 2 アイコン：ワイングラスとビアジョッキ間に小さな gap を入れる。
+     さらにアイコン群を少し左に寄せて、テキストとの間に余白を確保 */
+  .si-icon.si-icon--2 {
+    gap: 6px !important;
+    flex-shrink: 0 !important;
+    margin-right: 20px !important;
+  }
+  .si-icon--2 img { width: 32px !important; height: 54px !important; }
+  /* テキスト側：アイコンとぶつからないよう shrink 設定 */
+  .si-text     { flex-shrink: 1; }
+  .si-name     { font-size: 20px !important; }
+  .si-price    { font-size: 18px !important; }
+  .si-price .si-unit { font-size: 13px !important; }
+  .si-sub      { font-size: 12px !important; }
+
+  /* ---------- 06 NIGHT ---------- */
+  .night-label { font-size: 20px !important; }
+  .night-head  { font-size: 28px !important; white-space: normal !important; line-height: 1.3; }
+  .night-text  { font-size: 16px !important; line-height: 1.8 !important; gap: 16px !important; text-align: center; }
+  .night-hours { width: auto !important; transform: rotate(-3deg); margin: 4px auto !important; }
+  .night-hours .nh-txt { font-size: 22px !important; transform: none !important; }
+  .night-hours .nh-line { display: none !important; }
+  .night-brand { font-size: 44px !important; }
+  .night-brand .brand-mark { height: 26px !important; }
+  .night-photo { width: 100% !important; max-width: 360px; height: auto !important; aspect-ratio: 684/530; transform: rotate(-1.5deg); margin: 6px auto !important; }
+  .night-open  { display: none !important; }
+
+  /* ---------- 07 ACCESS / FOOTER ---------- */
+  .acc-awning { height: 16px !important; background-size: 100% 100% !important; }
+  /* 絶対配置の解除 */
+  .acc-card, .acc-map, .acc-cta, .acc-nav {
+    position: static !important;
+    left: auto !important; top: auto !important;
+    width: 100% !important; height: auto !important;
+    transform: none !important; margin: 0 auto !important;
+  }
+  .acc-eyebrow { font-size: 22px !important; }
+  .acc-head    { font-size: 30px !important; white-space: normal !important; }
+
+  /* 店舗情報カード */
+  .acc-card { max-width: 360px; padding: 16px 18px !important; border-width: 3px !important; border-radius: 14px !important; }
+  .acc-card-head { font-size: 28px !important; }
+  .acc-card-sub  { font-size: 15px !important; padding-bottom: 10px !important; }
+  .acc-info td   { padding: 8px 0 !important; }
+  .acc-info .ai      { width: 30px !important; }
+  .acc-info .ai img  { width: 20px !important; }
+  .acc-info .al      { width: 108px !important; font-size: 14px !important; }
+  .acc-info .al small{ font-size: 10px !important; }
+  .acc-info .av      { font-size: 12px !important; padding-left: 9px !important; }
+
+  /* 地図 */
+  .acc-map { max-width: 360px; aspect-ratio: 786/420; border-width: 3px !important; border-radius: 14px !important; }
+  .acc-map iframe { width: 100% !important; height: 100% !important; }
+
+  /* 問い合わせ文 */
+  .acc-inquiry { gap: 8px !important; max-width: 360px; }
+  .acc-inquiry p { min-width: 0; font-size: 13px !important; white-space: normal !important; text-align: center; }
+  .acc-inquiry .acc-mark { display: none !important; }
+
+  /* CTA ボタン（縦積み） */
+  .acc-cta { max-width: 360px; flex-direction: column !important; gap: 12px !important; }
+  .cta { width: 100% !important; gap: 14px !important; padding: 12px 18px !important;
+    border-width: 2px !important; border-radius: 16px !important; }
+  .cta-ic img        { height: 48px !important; }
+  .cta-ic--ring      { width: 50px !important; height: 50px !important; }
+  .cta-ic--ring img  { height: 28px !important; }
+  .cta-tx b    { font-size: 24px !important; }
+  .cta-tx span { font-size: 14px !important; }
+
+  /* フッター */
+  .acc-footer { display: none !important; }
+  .acc-nav { width: auto !important; max-width: 100% !important; box-sizing: border-box;
+    flex-wrap: nowrap; justify-content: center; gap: 8px !important;
+    background: #FDF2D8; padding: 12px 16px !important; border-radius: 12px;
+    align-self: center; margin-top: 6px !important; }
+  .acc-nav a { font-size: 15px !important; }
+  .acc-dot { width: 7px !important; height: 7px !important; }
+
+  /* ============================================================
+     MOBILE: アニメーション調整（最小限）
+     ・装飾(.deco) は基本 display:none。ただし .mb-show が付いた
+       ものは表示し、装飾アニメ（fx-*, s*-* 等）もそのまま再生
+     ・登場アニメは原則そのまま再生（写真の浮遊・見出しのポップ等）
+     ・モバイル特有の問題（回転 conflict、横スライド方向、touch hover）
+       が起きるものだけピンポイントで上書き
+     ============================================================ */
+
+  @keyframes mb-fade-up {
+    0%   { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  /* スマホでも動きを充実させるための強化キーフレーム群 */
+  @keyframes mb-pop-in {
+    0%   { opacity: 0; transform: scale(.7); }
+    60%  { opacity: 1; transform: scale(1.08); }
+    85%  {              transform: scale(.98); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes mb-pop-tilt {
+    0%   { opacity: 0; transform: scale(.6) rotate(-4deg); }
+    60%  { opacity: 1; transform: scale(1.1) rotate(2deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+  @keyframes mb-slide-in-left {
+    0%   { opacity: 0; transform: translateX(-30px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes mb-slide-in-down {
+    0%   { opacity: 0; transform: translateY(-20px) scale(.92); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes mb-float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+  @keyframes mb-float-sm {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+  }
+  /* 軽い揺らぎ（title 等） */
+  @keyframes mb-wobble {
+    0%, 100% { transform: scale(1)    rotate(0deg); }
+    50%      { transform: scale(1.04) rotate(-2deg); }
+  }
+  /* リボンのほのかな脈動 */
+  @keyframes mb-ribbon-pulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.04); }
+  }
+  @keyframes mb-poyon {
+    0%, 60%, 100% { transform: translateY(0) scale(1, 1); }
+    68%           { transform: translateY(0) scale(1.10, .90); }
+    78%           { transform: translateY(-14%) scale(.95, 1.05); }
+    88%           { transform: translateY(0) scale(1.06, .94); }
+    94%           { transform: translateY(-4%) scale(.99, 1.01); }
+  }
+
+  /* ============================================================
+     SECTION 1: ヒーローの主役要素を充実
+     ・PEACE BURGER ロゴ：ポップイン
+     ・サブ見出し：フェードアップ
+     ・写真：ドロップインの後、px ベースで明確に浮遊
+       （元の cqi 計算だとスマホでは数 px しか動かないため、
+        絶対 px の浮遊キーフレームに差し替え）
+     ============================================================ */
+  /* PEACE BURGER ロゴ：ポップイン → 継続的にふんわり浮遊 */
+  .hero-logo {
+    animation:
+      mb-pop-tilt 1.0s cubic-bezier(.34, 1.56, .64, 1) .2s both,
+      mb-float-sm 4.5s ease-in-out 1.3s infinite;
+    transform-origin: 50% 50%;
+  }
+  .hero-subtitle {
+    animation: mb-fade-up .8s ease-out .7s both;
+  }
+  /* 写真の浮遊：mobile 用に振幅を絶対 px に。-3deg の傾きは保持 */
+  @keyframes mb-hero-photo-float {
+    0%, 100% { transform: rotate(-3deg) translateY(0); }
+    50%      { transform: rotate(-3deg) translateY(-10px); }
+  }
+  .hero-photo-anim {
+    animation:
+      hero-photo-drop 1.1s cubic-bezier(.34,1.56,.64,1) both,
+      mb-hero-photo-float 4.5s ease-in-out 1.1s infinite !important;
+  }
+
+  /* ============================================================
+     SECTION 2: BEST SELLER の主役要素を充実
+     ・BEST SELLER リボン：上からスライドイン
+     ・写真：勢いよくポップイン → ふんわり浮遊
+     ・Peace Burger タイトル：ポップイン（傾き付き）
+     ・¥1,300 価格：ポップイン
+     ・全メニューを見るボタン：フェードアップ → ぽよん継続
+     ============================================================ */
+  .s-best[data-animate-on-view] .best-ribbon,
+  .s-best[data-animate-on-view] .best-frame,
+  .s-best[data-animate-on-view] .best-title,
+  .s-best[data-animate-on-view] .best-price,
+  .s-best[data-animate-on-view] .best-btn {
+    opacity: 0;
+  }
+  /* リボン：スライドダウン → ほのかな脈動継続 */
+  .s-best.in-view .best-ribbon {
+    animation:
+      mb-slide-in-down .8s cubic-bezier(.34, 1.56, .64, 1) .1s both,
+      mb-ribbon-pulse 3.2s ease-in-out 1.2s infinite !important;
+  }
+  /* 写真：ポップインで登場し、その後ふわふわ浮遊 */
+  .s-best.in-view .best-frame {
+    animation:
+      mb-pop-tilt 1.0s cubic-bezier(.34, 1.56, .64, 1) .3s both,
+      mb-float 4s ease-in-out 1.5s infinite !important;
+    transform-origin: 50% 60% !important;
+  }
+  /* タイトル：ポップイン → 軽くゆらゆら継続 */
+  .s-best.in-view .best-title {
+    animation:
+      mb-pop-in .9s cubic-bezier(.34, 1.56, .64, 1) .6s both,
+      mb-wobble 3.5s ease-in-out 1.8s infinite !important;
+    transform-origin: 50% 50% !important;
+  }
+  /* 価格 */
+  .s-best.in-view .best-price {
+    animation: mb-pop-in .8s cubic-bezier(.34, 1.56, .64, 1) .9s both !important;
+    transform-origin: 50% 50% !important;
+  }
+  /* ボタン：フェードアップで現れて、その後ぽよぽよ跳ねる */
+  .s-best.in-view .best-btn {
+    animation:
+      mb-fade-up .7s ease-out 1.4s both,
+      mb-poyon 2.4s ease-in-out 2.5s infinite !important;
+    transform: none !important;
+    transform-origin: 50% 100% !important;
+  }
+
+  /* ============================================================
+     SECTION 3: STORY のタイトル類＋写真を充実
+     ・OUR STORY ラベル：スライドダウン
+     ・ヒルとヨル見出し：ポップイン
+     ・スタッフ写真／外観写真：fade-up 登場後、ふんわり浮遊継続
+     ============================================================ */
+  .s-story[data-animate-on-view] .story-label,
+  .s-story[data-animate-on-view] .story-head {
+    opacity: 0;
+  }
+  .s-story.in-view .story-label {
+    animation: mb-slide-in-down .8s cubic-bezier(.34, 1.56, .64, 1) .2s both !important;
+  }
+  .s-story.in-view .story-head {
+    animation: mb-pop-tilt 1.0s cubic-bezier(.34, 1.56, .64, 1) .4s both !important;
+    transform-origin: 50% 50% !important;
+  }
+  /* スタッフ写真／外観写真：fade-up 登場後、ふんわり浮遊継続 */
+  .s-story.in-view .ph-frame.s3-fade-up {
+    animation:
+      s3-fade-up .9s cubic-bezier(.22, 1, .36, 1) .2s both,
+      mb-float-sm 4.5s ease-in-out 1.3s infinite !important;
+  }
+  .s-story.in-view .ph-frame.s3-fade-up.s3-late {
+    animation:
+      s3-fade-up .9s cubic-bezier(.22, 1, .36, 1) .55s both,
+      mb-float-sm 4.5s ease-in-out 1.8s infinite !important;
+  }
+
+  /* ============================================================
+     SECTION 4: OUR SECRET をポップで充実
+     ・3 カラムは縦積みなので、シンプルな fade-up ではなく
+       ポップインで一枚ずつ登場
+     ============================================================ */
+  .s-secret.in-view .secret-col {
+    animation: mb-pop-in .8s cubic-bezier(.34, 1.56, .64, 1) both !important;
+    transform-origin: 50% 50% !important;
+  }
+  .s-secret.in-view .secret-col:nth-child(1) { animation-delay: .25s !important; }
+  .s-secret.in-view .secret-col:nth-child(2) { animation-delay: .55s !important; }
+  .s-secret.in-view .secret-col:nth-child(3) { animation-delay: .85s !important; }
+  .s-secret[data-animate-on-view] .secret-col {
+    opacity: 0; transform: scale(.7);
+  }
+  /* OUR SECRET ラベル＆見出しも強化 */
+  .s-secret[data-animate-on-view] .secret-label,
+  .s-secret[data-animate-on-view] .secret-head {
+    opacity: 0;
+  }
+  .s-secret.in-view .secret-label {
+    animation: mb-slide-in-down .7s cubic-bezier(.34, 1.56, .64, 1) .1s both !important;
+  }
+  .s-secret.in-view .secret-head {
+    animation: mb-pop-in .9s cubic-bezier(.34, 1.56, .64, 1) .3s both !important;
+    transform-origin: 50% 50% !important;
+  }
+
+  /* ============================================================
+     SECTION 5: SUNDAY MENU のカードに stagger 登場
+     ・4 枚のメニューカードが縦積みなので、上から順次ポップイン
+     ・サイドメニューもフェードアップで現れる
+     ============================================================ */
+  .s-menu[data-animate-on-view] .menu-card,
+  .s-menu[data-animate-on-view] .side-menu {
+    opacity: 0;
+  }
+  .s-menu.in-view .menu-card {
+    animation: mb-fade-up .7s cubic-bezier(.34, 1.56, .64, 1) both !important;
+    transform-origin: 50% 50% !important;
+  }
+  .s-menu.in-view .menu-card:nth-child(1) { animation-delay: .2s !important; }
+  .s-menu.in-view .menu-card:nth-child(2) { animation-delay: .35s !important; }
+  .s-menu.in-view .menu-card:nth-child(3) { animation-delay: .50s !important; }
+  .s-menu.in-view .menu-card:nth-child(4) { animation-delay: .65s !important; }
+  .s-menu.in-view .side-menu {
+    animation: mb-fade-up .8s ease-out .9s both !important;
+  }
+
+  /* 3) MENU カードのホバー拡大：タッチ端末では発火させない */
+  .menu-card { cursor: default !important; transition: none !important; }
+  .menu-card .mc-photo img { transition: none !important; }
+  .menu-card:hover {
+    transform: none !important; z-index: 1 !important;
+    box-shadow: -6px 6px 0 #CDAF87 !important;
+    background: #FCF4E0 !important;
+  }
+  .menu-card:hover .mc-photo img { transform: none !important; }
+
+  /* ============================================================
+     SECTION 6: AT NIGHT を強化
+     ・AT NIGHT ラベル / ヨル見出し / 波線は元の wipe-in 等が
+       残っているので、写真とブランド名にもポップを追加
+     ・写真：回転 conflict 回避のため scale + fade で代用
+     ・ヒルトヨル ブランド名・営業時間：フェードアップ
+     ============================================================ */
+  /* AT NIGHT 写真：ポップイン登場 → ふんわり浮遊継続 */
+  .s-night.in-view .s6-photo {
+    animation:
+      mb-pop-in 1.0s cubic-bezier(.34, 1.56, .64, 1) .4s both,
+      mb-float-sm 5s ease-in-out 1.6s infinite !important;
+    transform-origin: 50% 50% !important;
+  }
+  .s-night[data-animate-on-view] .s6-photo {
+    opacity: 0; transform: scale(.85);
+  }
+  .s-night[data-animate-on-view] .night-hours,
+  .s-night[data-animate-on-view] .night-brand {
+    opacity: 0;
+  }
+  .s-night.in-view .night-hours {
+    animation: mb-fade-up .8s ease-out 1.0s both !important;
+  }
+  .s-night.in-view .night-brand {
+    animation: mb-pop-in .9s cubic-bezier(.34, 1.56, .64, 1) 1.3s both !important;
+    transform-origin: 50% 50% !important;
+  }
+
+  /* ============================================================
+     SECTION 7: ACCESS をポップで充実
+     ・カード／マップ：ポップインで登場（横スライドより目を引く）
+     ・問い合わせ文：フェードアップ
+     ・3 つの CTA：下から順次スライドアップ
+     ・電話ボタンは表示完了後に常時脈動（モバイルでも CV 誘導）
+     ============================================================ */
+  .s-access.in-view .acc-card,
+  .s-access.in-view .acc-map {
+    animation: mb-pop-in .9s cubic-bezier(.34, 1.56, .64, 1) both !important;
+    transform-origin: 50% 50% !important;
+  }
+  .s-access.in-view .acc-card { animation-delay: .3s !important; }
+  .s-access.in-view .acc-map  { animation-delay: .55s !important; }
+  .s-access[data-animate-on-view] .acc-card,
+  .s-access[data-animate-on-view] .acc-map {
+    opacity: 0; transform: scale(.9);
+  }
+  /* CTA：電話 → IG → LINE の順でスライドイン、電話のみ脈動も継続 */
+  @keyframes mb-cta-pulse {
+    0%, 70%, 100% { transform: scale(1); }
+    80%           { transform: scale(1.04); }
+    90%           { transform: scale(1); }
+  }
+  .s-access.in-view .acc-cta .cta:nth-child(1) {
+    animation:
+      mb-fade-up .7s ease-out 1.0s both,
+      mb-cta-pulse 2.6s ease-in-out 2.5s infinite !important;
+  }
+  .s-access.in-view .acc-cta .cta:nth-child(2) {
+    animation: mb-fade-up .7s ease-out 1.2s both !important;
+  }
+  .s-access.in-view .acc-cta .cta:nth-child(3) {
+    animation: mb-fade-up .7s ease-out 1.4s both !important;
+  }
+
+  /* 上記以外の登場・継続アニメ（hero-photo-anim の浮遊、
+     hero-headline のポップ＆揺らぎ、hero-wave のパルス、
+     hero-sunday-stamp のポップ、story の text-rise、
+     secret-head .num のポップ＆ぽよぽよ、night の wipe-in /
+     タイプライター、access の wipe-in 等）は元のキーフレームが
+     そのまま再生される。 */
+
+  /* ============================================================
+     MOBILE: 装飾アイコンの選択表示（.mb-show）
+     ・section の角・辺に小さく配置して紙面に華やかさを残す
+     ・position: absolute で他のコンテンツの邪魔をしない
+     ・fx-* / s*-* のアニメクラスはそのまま動作する
+     ============================================================ */
+  .deco.mb-show {
+    display: block !important;
+    position: absolute !important;
+    z-index: 1 !important;
+    width: 48px !important;
+    height: auto !important;
+    transform: none;
+    margin: 0 !important;
+    pointer-events: none;
+  }
+  .deco.mb-show.mb-md { width: 56px !important; }
+  .deco.mb-show.mb-lg { width: 72px !important; }
+  .deco.mb-show.mb-xs { width: 36px !important; }
+
+  /* コーナー位置 */
+  .deco.mb-show.mb-tl  { top: 10px;  left: 8px;  }
+  .deco.mb-show.mb-tr  { top: 10px;  right: 8px; }
+  .deco.mb-show.mb-bl  { bottom: 12px; left: 8px; }
+  .deco.mb-show.mb-br  { bottom: 12px; right: 8px; }
+  /* 中央右・中央左（辺中央） */
+  .deco.mb-show.mb-mr  { top: 50%; right: 6px; }
+  .deco.mb-show.mb-ml  { top: 50%; left: 6px; }
+  /* 上部の左右、ヘッダー下 */
+  .deco.mb-show.mb-tl2 { top: 70px;  left: 8px; }
+  .deco.mb-show.mb-tr2 { top: 70px;  right: 8px; }
+  /* 下部の左右、フッター上 */
+  .deco.mb-show.mb-bl2 { bottom: 70px; left: 8px; }
+  .deco.mb-show.mb-br2 { bottom: 70px; right: 8px; }
+
+  /* mb-show が flip-x の影響を受けないよう */
+  .deco.mb-show.flip-x { transform: scaleX(-1); }
+
+  /* AT NIGHT のワイングラス・ビアジョッキは縦長で本文に被るため、
+     mb-lg よりさらに小さくする */
+  .deco.s6-wine.mb-show,
+  .deco.s6-beer.mb-show {
+    width: 44px !important;
+  }
+
+  /* ============================================================
+     MOBILE: HERO セクションのレイアウト調整（順序・配置）
+     ・CTA ボタンをセクション末尾に移動
+     ・Sunday Only スタンプを写真の右下に重ねる
+     ============================================================ */
+
+  /* hero-cta は display:contents にして、中の hero-lead / hero-btns を
+     section の直接 flex 子要素として扱う → order で並び替え可能に */
+  .s-hero .hero-cta { display: contents !important; }
+
+  /* CTA ボタンをセクション末尾に */
+  .s-hero .hero-btns {
+    order: 99 !important;
+    margin-top: 16px !important;
+  }
+
+  /* 並び順：写真 → Sunday Only → ボタン
+     11:30-15:00 はモバイルでは非表示にする */
+  .s-hero .hero-sunday-stamp { order: 1 !important; }
+  .s-hero .hero-hours-stamp  { display: none !important; }
+
+  /* Sunday Only：写真の右下に重ねる（少し右上寄り） */
+  .hero-sunday-stamp.mb-keep {
+    align-self: flex-end !important;
+    width: 38% !important;
+    /* 上: より深く写真にかぶせる
+       右: 画面右端ぎりぎりに寄せる
+       下: ボタンとの間隔は section の flex gap に任せる */
+    margin: -32% 1% 0 0 !important;
+    position: relative !important;
+    z-index: 10 !important;
+  }
+}
+
+/* ============================================================
+   Scroll インジケータ（画面中央下・固定／常時表示）
+   ・ページ読み込み後にゆっくりフェードイン
+   ・スクロールしても消えず、常に追従する
+   ・クリックで「次の1画面ぶん」スムーススクロール
+   ============================================================ */
+.scroll-indicator {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(16px, 3.2vh, 36px);
+  z-index: 100;
+
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+
+  padding: 14px 20px 12px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #2A2A2A;
+  border: none;
+  border-radius: 14px;
+
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12),
+              0 2px 6px  rgba(0, 0, 0, 0.06);
+
+  font-family: "Fredoka", sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: .06em;
+  line-height: 1;
+
+  cursor: pointer;
+
+  /* 初期：透明＆少し下にずらして、ゆっくり浮かび上がる
+     translate(-50%, …) で X 中央を維持しつつ Y で動かす */
+  opacity: 0;
+  transform: translate(-50%, 14px);
+  transition:
+    opacity   .9s ease,
+    transform .9s ease,
+    background .2s ease;
+}
+
+/* JS が付与する：ページ初期表示後にふわっと出現 */
+.scroll-indicator.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.scroll-indicator:hover {
+  background: #fff;
+}
+
+/* V字シェブロン（CSS だけで作る・下向き） */
+.scroll-indicator .scroll-arrow {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translate(-1px, -1px);
+  animation: scroll-arrow-bob 1.6s ease-in-out infinite;
+}
+
+@keyframes scroll-arrow-bob {
+  0%, 100% { transform: rotate(45deg) translate(-3px, -3px); opacity: .35; }
+  50%      { transform: rotate(45deg) translate(2px,  2px);  opacity: 1;   }
+}
+
+.scroll-indicator .scroll-label {
+  user-select: none;
+}
+
+/* モバイルではやや小さく */
+@media (max-width: 768px) {
+  .scroll-indicator {
+    padding: 10px 14px 8px;
+    font-size: 11px;
+    border-radius: 12px;
+  }
+  .scroll-indicator .scroll-arrow { width: 11px; height: 11px; }
+}
+
+/* モーション抑制 */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-indicator,
+  .scroll-indicator .scroll-arrow {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ============================================================
+   ハンバーガーメニュー（モバイル専用・右上固定）
+   ・ボタンタップで右からメニューパネルがスライドイン
+   ・各リンクをタップすると該当セクションへスムーススクロール
+     ＆メニューが自動で閉じる
+   ・バックドロップタップでも閉じる
+   ・デスクトップでは display:none で非表示
+   ============================================================ */
+.hamburger-btn {
+  display: none; /* デフォルト非表示。モバイルだけ表示 */
+}
+
+@media (max-width: 768px) {
+  /* ---- ハンバーガーボタン ---- */
+  .hamburger-btn {
+    display: flex;
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 200;
+
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    background: #fff;
+    border: 2px solid #4D2401;
+    border-radius: 12px;
+
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .18);
+    transition: background .2s ease, transform .15s ease;
+  }
+  .hamburger-btn:active { transform: scale(.95); }
+
+  .hamburger-btn span {
+    display: block;
+    width: 22px;
+    height: 3px;
+    background: #4D2401;
+    border-radius: 2px;
+    transition: transform .3s cubic-bezier(.22, 1, .36, 1),
+                opacity   .2s ease;
+  }
+
+  /* 開いた状態：3本線 → X に変形 */
+  .hamburger-btn.is-open span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+  }
+  .hamburger-btn.is-open span:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger-btn.is-open span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+  }
+
+  /* ---- メニューパネル ---- */
+  .hamburger-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(280px, 78vw);
+    z-index: 199;
+
+    background: #FDF2D8;          /* クリーム背景（ブランド色） */
+    box-shadow: -8px 0 24px rgba(0, 0, 0, .2);
+    padding: 84px 28px 32px;
+
+    transform: translateX(100%);
+    transition: transform .4s cubic-bezier(.22, 1, .36, 1);
+    overflow-y: auto;
+  }
+  .hamburger-menu.is-open { transform: translateX(0); }
+
+  .hamburger-menu a {
+    font-family: "Noto Sans JP", sans-serif;
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: .06em;
+    color: #4D2401;
+
+    padding: 16px 4px;
+    border-bottom: 2px dashed rgba(77, 36, 1, .25);
+
+    transition: color .2s ease, padding-left .2s ease;
+  }
+  .hamburger-menu a:hover,
+  .hamburger-menu a:active {
+    color: #E9171E;
+    padding-left: 8px;
+  }
+
+  /* ---- バックドロップ（外側タップで閉じる） ---- */
+  .hamburger-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 198;
+    background: rgba(0, 0, 0, .45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .35s ease;
+  }
+  .hamburger-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ---- 元の .hero-nav（モバイル）は非表示にする
+          （ハンバーガーで代替） ---- */
+  .s-hero .hero-nav { display: none !important; }
+}
+
+/* モーション抑制：ハンバーガーは存在は残しつつアニメ無し */
+@media (prefers-reduced-motion: reduce) {
+  .hamburger-btn span,
+  .hamburger-menu,
+  .hamburger-backdrop {
+    transition: none !important;
+  }
+}

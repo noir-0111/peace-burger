@@ -1,0 +1,8 @@
+# robots.txt for PEACE BURGER LP
+# 全てのクローラーに対して全ページのインデックスを許可
+
+User-agent: *
+Allow: /
+
+# サイトマップを将来追加した場合はここに記載
+# Sitemap: https://peaceburger.example.com/sitemap.xml

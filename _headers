@@ -1,0 +1,26 @@
+# ============================================================
+# Cloudflare Pages カスタムHTTPヘッダー
+# ============================================================
+# 公式ドキュメント: https://developers.cloudflare.com/pages/configuration/headers/
+
+# ---- 全ファイル共通：セキュリティヘッダー ----
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# ---- HTML: キャッシュは短めに（更新が反映されやすいように） ----
+/*.html
+  Cache-Control: public, max-age=300, must-revalidate
+
+# ---- CSS / JS: 中期キャッシュ ----
+/*.css
+  Cache-Control: public, max-age=3600
+
+/*.js
+  Cache-Control: public, max-age=3600
+
+# ---- 画像: 長期キャッシュ（画像は変更頻度が低いため） ----
+/assets/img/*
+  Cache-Control: public, max-age=31536000, immutable
