@@ -1856,23 +1856,24 @@ body {
     0%   { opacity: 0; transform: translateY(-20px) scale(.92); }
     100% { opacity: 1; transform: translateY(0) scale(1); }
   }
+  /* スマホで視認できるよう振幅を強める（ジッと見ても「動いてる」と分かる） */
   @keyframes mb-float {
     0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-10px); }
+    50%      { transform: translateY(-14px); }
   }
   @keyframes mb-float-sm {
     0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-6px); }
+    50%      { transform: translateY(-10px); }
   }
-  /* 軽い揺らぎ（title 等） */
+  /* 軽い揺らぎ（title 等）— 視認性のためスケール強化 */
   @keyframes mb-wobble {
     0%, 100% { transform: scale(1)    rotate(0deg); }
-    50%      { transform: scale(1.04) rotate(-2deg); }
+    50%      { transform: scale(1.06) rotate(-3deg); }
   }
-  /* リボンのほのかな脈動 */
+  /* リボンの脈動 */
   @keyframes mb-ribbon-pulse {
     0%, 100% { transform: scale(1); }
-    50%      { transform: scale(1.04); }
+    50%      { transform: scale(1.06); }
   }
   @keyframes mb-poyon {
     0%, 60%, 100% { transform: translateY(0) scale(1, 1); }
@@ -1894,7 +1895,7 @@ body {
   .hero-logo {
     animation:
       mb-pop-tilt 1.0s cubic-bezier(.34, 1.56, .64, 1) .2s both,
-      mb-float-sm 4.5s ease-in-out 1.3s infinite;
+      mb-float-sm 3.2s ease-in-out 1.3s infinite;
     transform-origin: 50% 50%;
   }
   .hero-subtitle {
@@ -1908,7 +1909,7 @@ body {
   .hero-photo-anim {
     animation:
       hero-photo-drop 1.1s cubic-bezier(.34,1.56,.64,1) both,
-      mb-hero-photo-float 4.5s ease-in-out 1.1s infinite !important;
+      mb-hero-photo-float 3.2s ease-in-out 1.1s infinite !important;
   }
 
   /* ============================================================
@@ -1936,7 +1937,7 @@ body {
   .s-best.in-view .best-frame {
     animation:
       mb-pop-tilt 1.0s cubic-bezier(.34, 1.56, .64, 1) .3s both,
-      mb-float 4s ease-in-out 1.5s infinite !important;
+      mb-float 3s ease-in-out 1.5s infinite !important;
     transform-origin: 50% 60% !important;
   }
   /* タイトル：ポップイン → 軽くゆらゆら継続 */
@@ -1981,12 +1982,12 @@ body {
   .s-story.in-view .ph-frame.s3-fade-up {
     animation:
       s3-fade-up .9s cubic-bezier(.22, 1, .36, 1) .2s both,
-      mb-float-sm 4.5s ease-in-out 1.3s infinite !important;
+      mb-float-sm 3.2s ease-in-out 1.3s infinite !important;
   }
   .s-story.in-view .ph-frame.s3-fade-up.s3-late {
     animation:
       s3-fade-up .9s cubic-bezier(.22, 1, .36, 1) .55s both,
-      mb-float-sm 4.5s ease-in-out 1.8s infinite !important;
+      mb-float-sm 3.2s ease-in-out 1.8s infinite !important;
   }
 
   /* ============================================================
@@ -1998,9 +1999,11 @@ body {
     animation: mb-pop-in .8s cubic-bezier(.34, 1.56, .64, 1) both !important;
     transform-origin: 50% 50% !important;
   }
-  .s-secret.in-view .secret-col:nth-child(1) { animation-delay: .25s !important; }
-  .s-secret.in-view .secret-col:nth-child(2) { animation-delay: .55s !important; }
-  .s-secret.in-view .secret-col:nth-child(3) { animation-delay: .85s !important; }
+  /* 各カードを 2 秒間隔で順次出現させる（1枚目も 2 秒待機からスタート）
+     見ている人が「次は何が出る？」と飽きずに楽しめる演出 */
+  .s-secret.in-view .secret-col:nth-child(1) { animation-delay: 2s !important; }
+  .s-secret.in-view .secret-col:nth-child(2) { animation-delay: 4s !important; }
+  .s-secret.in-view .secret-col:nth-child(3) { animation-delay: 6s !important; }
   .s-secret[data-animate-on-view] .secret-col {
     opacity: 0; transform: scale(.7);
   }
@@ -2059,7 +2062,7 @@ body {
   .s-night.in-view .s6-photo {
     animation:
       mb-pop-in 1.0s cubic-bezier(.34, 1.56, .64, 1) .4s both,
-      mb-float-sm 5s ease-in-out 1.6s infinite !important;
+      mb-float-sm 3.5s ease-in-out 1.6s infinite !important;
     transform-origin: 50% 50% !important;
   }
   .s-night[data-animate-on-view] .s6-photo {
