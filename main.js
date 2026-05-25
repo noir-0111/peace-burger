@@ -181,6 +181,162 @@
     });
   }
 
+  /* --- 5b) スマホ用 写真＆主役要素アニメ（rAF で直接 inline style 操作）
+     CSS animation が効かない環境のため、requestAnimationFrame で
+     毎フレーム直接 style.transform を書き換える。
+     ・写真：上下にゆらゆら浮遊
+     ・ロゴ／見出し：軽くスケール+回転で「生きてる」感
+  ------------------------------------------------------------------ */
+  if (!reduce && window.matchMedia('(max-width: 768px)').matches) {
+    // 共通形式: amp=上下振幅 / rotAmp=回転振幅 / scaleAmp=拡縮振幅(0〜1) / period=周期ms
+    var animConfigs = [
+      /* === 写真系（大きく上下）
+            ※ ヒーロー写真（.s-hero .hero-photo）はユーザー要望で意図的に外している === */
+      { selector: '.s-best .best-frame',   baseRot:  0, amp: 18, rotAmp: 2,   scaleAmp: 0,    period: 3200, phase: 0.2  },
+      { selector: '.s-story .ph-frame',    baseRot:  0, amp: 16, rotAmp: 2,   scaleAmp: 0,    period: 3400, phase: 0.4  },
+      { selector: '.s-night .night-photo', baseRot:  0, amp: 16, rotAmp: 2,   scaleAmp: 0,    period: 3600, phase: 0.6  },
+      /* === タイトル系（軽くゆらゆら + スケール） === */
+      { selector: '.hero-logo',            baseRot:  0, amp:  8, rotAmp: 1.5, scaleAmp: 0.04, period: 2800, phase: 0    },
+      { selector: '.hero-headline',        baseRot:  0, amp:  4, rotAmp: 2.5, scaleAmp: 0.025,period: 3200, phase: 0.35 }
+    ];
+
+    // 全対象要素を収集
+    var targets = [];
+    animConfigs.forEach(function (cfg) {
+      var els = document.querySelectorAll(cfg.selector);
+      els.forEach(function (el, idx) {
+        el.style.setProperty('opacity', '1', 'important');
+        targets.push({
+          el:        el,
+          baseRot:   cfg.baseRot,
+          amp:       cfg.amp,
+          rotAmp:    cfg.rotAmp,
+          scaleAmp:  cfg.scaleAmp,
+          period:    cfg.period,
+          phase:     cfg.phase + idx * 0.15
+        });
+      });
+    });
+
+    if (targets.length > 0) {
+      var startTime = Date.now();
+
+      function tickAnim() {
+        var now = Date.now();
+        targets.forEach(function (t) {
+          var elapsed = (now - startTime) / t.period + t.phase;
+          var sinVal  = Math.sin(elapsed * Math.PI * 2);
+          var cosVal  = Math.cos(elapsed * Math.PI * 2);
+          var y       = sinVal * t.amp * -1;
+          var rot     = t.baseRot + cosVal * t.rotAmp;
+          var scale   = 1 + sinVal * t.scaleAmp;
+          // setProperty で !important 付き、CSS の transform: none を確実に上書き
+          t.el.style.setProperty(
+            'transform',
+            'rotate(' + rot.toFixed(2) + 'deg) translateY(' + y.toFixed(2) + 'px) scale(' + scale.toFixed(3) + ')',
+            'important'
+          );
+        });
+        requestAnimationFrame(tickAnim);
+      }
+      requestAnimationFrame(tickAnim);
+
+      console.log('[Anim] requestAnimationFrame で',
+        targets.length, '個の要素をアニメ開始（写真＋ロゴ＋見出し）');
+    } else {
+      console.warn('[Anim] アニメ対象の要素が見つかりませんでした');
+    }
+  }
+
+  /* --- 5c) スマホ用 メニュー写真の拡大モーダル ---------------------
+     スマホでメニューカードをタップすると、写真を画面いっぱいに
+     大きく表示する。背景タップ or ×ボタンで閉じる。
+  ------------------------------------------------------------------ */
+  function openPhotoModal(imgSrc, imgAlt, caption) {
+    // オーバーレイ作成
+    var overlay = document.createElement('div');
+    overlay.className = 'menu-photo-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', '写真を拡大表示');
+
+    // 拡大画像
+    var bigImg = document.createElement('img');
+    bigImg.src = imgSrc;
+    bigImg.alt = imgAlt || '';
+
+    // キャプション（メニュー名）
+    var capEl = null;
+    if (caption) {
+      capEl = document.createElement('div');
+      capEl.className = 'menu-photo-caption';
+      capEl.textContent = caption;
+    }
+
+    // ×ボタン
+    var closeBtn = document.createElement('button');
+    closeBtn.className = 'menu-photo-close';
+    closeBtn.type = 'button';
+    closeBtn.setAttribute('aria-label', '閉じる');
+    closeBtn.textContent = '×';
+
+    overlay.appendChild(bigImg);
+    if (capEl) overlay.appendChild(capEl);
+    overlay.appendChild(closeBtn);
+    document.body.appendChild(overlay);
+
+    // アニメ発火（次のフレームでクラス付与）
+    requestAnimationFrame(function () {
+      overlay.classList.add('is-open');
+    });
+
+    // 背景スクロール停止
+    var prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    function closeModal() {
+      overlay.classList.remove('is-open');
+      document.body.style.overflow = prevOverflow;
+      setTimeout(function () {
+        if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+        document.removeEventListener('keydown', onKey);
+      }, 350);
+    }
+
+    // 背景タップで閉じる
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay || e.target === closeBtn) closeModal();
+    });
+    closeBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      closeModal();
+    });
+    // ESC キーで閉じる
+    function onKey(e) {
+      if (e.key === 'Escape') closeModal();
+    }
+    document.addEventListener('keydown', onKey);
+  }
+
+  // メニューカードにタップハンドラを設定
+  document.querySelectorAll('.menu-card').forEach(function (card) {
+    card.addEventListener('click', function (e) {
+      // スマホサイズの時だけ発火（デスクトップでは既存ホバー効果が動作）
+      if (!window.matchMedia('(max-width: 768px)').matches) return;
+
+      var img  = card.querySelector('.mc-photo img');
+      var name = card.querySelector('.mc-name');
+      if (!img) return;
+
+      openPhotoModal(
+        img.src,
+        img.alt,
+        name ? name.textContent : ''
+      );
+      // ヒントは閉じずに表示し続ける（他のカードも気軽にタップしてもらうため）
+    });
+  });
+
   /* --- 6) ハンバーガーメニュー（モバイル） ---------------------------
      - ボタンタップで開閉
      - メニュー内リンク or バックドロップで閉じる

@@ -1856,24 +1856,34 @@ body {
     0%   { opacity: 0; transform: translateY(-20px) scale(.92); }
     100% { opacity: 1; transform: translateY(0) scale(1); }
   }
-  /* スマホで視認できるよう振幅を強める（ジッと見ても「動いてる」と分かる） */
+  /* スマホで「動いてる」と一目で分かるように大幅に振幅 UP ＋ 回転も追加
+     4 段階のキーフレームで、どの瞬間に見ても動きが感じられる */
   @keyframes mb-float {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-14px); }
+    0%   { transform: translateY(0)     rotate(0deg); }
+    25%  { transform: translateY(-18px) rotate(-1.5deg); }
+    50%  { transform: translateY(-22px) rotate(0deg); }
+    75%  { transform: translateY(-12px) rotate(1.5deg); }
+    100% { transform: translateY(0)     rotate(0deg); }
   }
   @keyframes mb-float-sm {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-10px); }
+    0%   { transform: translateY(0)     rotate(0deg); }
+    25%  { transform: translateY(-12px) rotate(-1deg); }
+    50%  { transform: translateY(-16px) rotate(0deg); }
+    75%  { transform: translateY(-8px)  rotate(1deg); }
+    100% { transform: translateY(0)     rotate(0deg); }
   }
-  /* 軽い揺らぎ（title 等）— 視認性のためスケール強化 */
+  /* 揺らぎ（title 等）— 4 段階で大きく動く */
   @keyframes mb-wobble {
-    0%, 100% { transform: scale(1)    rotate(0deg); }
-    50%      { transform: scale(1.06) rotate(-3deg); }
+    0%   { transform: scale(1)    rotate(0deg); }
+    25%  { transform: scale(1.05) rotate(-3deg); }
+    50%  { transform: scale(1.08) rotate(0deg); }
+    75%  { transform: scale(1.05) rotate(3deg); }
+    100% { transform: scale(1)    rotate(0deg); }
   }
   /* リボンの脈動 */
   @keyframes mb-ribbon-pulse {
-    0%, 100% { transform: scale(1); }
-    50%      { transform: scale(1.06); }
+    0%, 100% { transform: scale(1)    rotate(0deg); }
+    50%      { transform: scale(1.08) rotate(-1deg); }
   }
   @keyframes mb-poyon {
     0%, 60%, 100% { transform: translateY(0) scale(1, 1); }
@@ -1895,22 +1905,29 @@ body {
   .hero-logo {
     animation:
       mb-pop-tilt 1.0s cubic-bezier(.34, 1.56, .64, 1) .2s both,
-      mb-float-sm 3.2s ease-in-out 1.3s infinite;
+      mb-float-sm 3.2s linear 1.3s infinite;
     transform-origin: 50% 50%;
   }
   .hero-subtitle {
     animation: mb-fade-up .8s ease-out .7s both;
   }
-  /* 写真の浮遊：mobile 用に振幅を絶対 px に。-3deg の傾きは保持 */
+  /* 写真の浮遊：opacity:1 と transform-origin を明示。
+     ・他の transform: none !important を打ち消すため強い指定 */
   @keyframes mb-hero-photo-float {
-    0%, 100% { transform: rotate(-3deg) translateY(0); }
-    50%      { transform: rotate(-3deg) translateY(-10px); }
+    0%   { transform: rotate(-3deg) translateY(0); }
+    25%  { transform: rotate(-5deg) translateY(-14px); }
+    50%  { transform: rotate(-3deg) translateY(-22px); }
+    75%  { transform: rotate(-1deg) translateY(-10px); }
+    100% { transform: rotate(-3deg) translateY(0); }
   }
-  .hero-photo-anim {
-    animation:
-      hero-photo-drop 1.1s cubic-bezier(.34,1.56,.64,1) both,
-      mb-hero-photo-float 3.2s ease-in-out 1.1s infinite !important;
+  /* セレクタを 2 重にして specificity を上げる */
+  .s-hero .hero-photo,
+  .hero-photo.hero-photo-anim {
+    opacity: 1 !important;
+    animation: mb-hero-photo-float 3s linear infinite !important;
+    transform-origin: 50% 50% !important;
   }
+  .hero-shadow { animation: none !important; }
 
   /* ============================================================
      SECTION 2: BEST SELLER の主役要素を充実
@@ -1933,18 +1950,17 @@ body {
       mb-slide-in-down .8s cubic-bezier(.34, 1.56, .64, 1) .1s both,
       mb-ribbon-pulse 3.2s ease-in-out 1.2s infinite !important;
   }
-  /* 写真：ポップインで登場し、その後ふわふわ浮遊 */
-  .s-best.in-view .best-frame {
-    animation:
-      mb-pop-tilt 1.0s cubic-bezier(.34, 1.56, .64, 1) .3s both,
-      mb-float 3s ease-in-out 1.5s infinite !important;
+  /* 写真：opacity:1 を明示して浮遊 */
+  .s-best .best-frame {
+    opacity: 1 !important;
+    animation: mb-float 3s linear infinite !important;
     transform-origin: 50% 60% !important;
   }
   /* タイトル：ポップイン → 軽くゆらゆら継続 */
   .s-best.in-view .best-title {
     animation:
       mb-pop-in .9s cubic-bezier(.34, 1.56, .64, 1) .6s both,
-      mb-wobble 3.5s ease-in-out 1.8s infinite !important;
+      mb-wobble 3s linear 1.8s infinite !important;
     transform-origin: 50% 50% !important;
   }
   /* 価格 */
@@ -1978,17 +1994,17 @@ body {
     animation: mb-pop-tilt 1.0s cubic-bezier(.34, 1.56, .64, 1) .4s both !important;
     transform-origin: 50% 50% !important;
   }
-  /* スタッフ写真／外観写真：fade-up 登場後、ふんわり浮遊継続 */
-  .s-story.in-view .ph-frame.s3-fade-up {
-    animation:
-      s3-fade-up .9s cubic-bezier(.22, 1, .36, 1) .2s both,
-      mb-float-sm 3.2s ease-in-out 1.3s infinite !important;
+  /* スタッフ写真／外観写真：opacity:1 を明示 */
+  .s-story .ph-frame {
+    opacity: 1 !important;
+    animation: mb-float-sm 3.2s linear infinite !important;
   }
-  .s-story.in-view .ph-frame.s3-fade-up.s3-late {
-    animation:
-      s3-fade-up .9s cubic-bezier(.22, 1, .36, 1) .55s both,
-      mb-float-sm 3.2s ease-in-out 1.8s infinite !important;
+  .s-story .ph-frame.s3-late {
+    opacity: 1 !important;
+    animation: mb-float-sm 3.5s linear .5s infinite !important;
   }
+  /* .inn（テキスト rise）の opacity と transform も先祖の rule に阻害されないよう */
+  .s-story .ph-frame img { opacity: 1 !important; }
 
   /* ============================================================
      SECTION 4: OUR SECRET をポップで充実
@@ -2058,15 +2074,11 @@ body {
      ・写真：回転 conflict 回避のため scale + fade で代用
      ・ヒルトヨル ブランド名・営業時間：フェードアップ
      ============================================================ */
-  /* AT NIGHT 写真：ポップイン登場 → ふんわり浮遊継続 */
-  .s-night.in-view .s6-photo {
-    animation:
-      mb-pop-in 1.0s cubic-bezier(.34, 1.56, .64, 1) .4s both,
-      mb-float-sm 3.5s ease-in-out 1.6s infinite !important;
+  /* AT NIGHT 写真：opacity:1 を明示 */
+  .s-night .night-photo {
+    opacity: 1 !important;
+    animation: mb-float-sm 3.5s linear infinite !important;
     transform-origin: 50% 50% !important;
-  }
-  .s-night[data-animate-on-view] .s6-photo {
-    opacity: 0; transform: scale(.85);
   }
   .s-night[data-animate-on-view] .night-hours,
   .s-night[data-animate-on-view] .night-brand {
@@ -2423,4 +2435,199 @@ body {
   .hamburger-backdrop {
     transition: none !important;
   }
+}
+
+
+/* ============================================================
+   ▼▼ スマホ写真アニメ 強制適用ブロック（最後に書くことで
+       他のすべての rule を後勝ち で上書きする）
+   ============================================================ */
+
+/* グローバル @keyframes 定義（@media 内よりこちらの方が確実） */
+@keyframes mb-photo-float-strong {
+  /* ★絶対見える派手版：scale を大きく振って必ず気づく ★ */
+  0%   { transform: rotate(-3deg) translateY(0)    scale(1);    }
+  25%  { transform: rotate(-8deg) translateY(-25px) scale(1.08); }
+  50%  { transform: rotate(-3deg) translateY(-40px) scale(1.12); }
+  75%  { transform: rotate(2deg)  translateY(-20px) scale(1.08); }
+  100% { transform: rotate(-3deg) translateY(0)    scale(1);    }
+}
+@keyframes mb-photo-float-soft {
+  0%   { transform: translateY(0)    rotate(0deg)  scale(1); }
+  25%  { transform: translateY(-12px) rotate(-1deg) scale(1.02); }
+  50%  { transform: translateY(-18px) rotate(0deg)  scale(1.03); }
+  75%  { transform: translateY(-8px)  rotate(1deg)  scale(1.02); }
+  100% { transform: translateY(0)    rotate(0deg)  scale(1); }
+}
+
+@media (max-width: 768px) {
+  /* ヒーロー写真：超強力に animation を当てる（specificity 最大） */
+  html body .s-hero .hero-photo,
+  html body .s-hero .hero-photo.hero-photo-anim {
+    opacity: 1 !important;
+    animation: mb-photo-float-strong 3s linear infinite !important;
+    transform-origin: 50% 50% !important;
+  }
+  /* 影は消す */
+  html body .s-hero .hero-shadow { animation: none !important; opacity: 0 !important; }
+
+  /* BEST SELLER 写真 */
+  html body .s-best .best-frame {
+    opacity: 1 !important;
+    animation: mb-photo-float-soft 3s linear infinite !important;
+    transform-origin: 50% 50% !important;
+  }
+
+  /* STORY 写真 */
+  html body .s-story .ph-frame {
+    opacity: 1 !important;
+    animation: mb-photo-float-soft 3.2s linear infinite !important;
+  }
+  html body .s-story .ph-frame.s3-late {
+    animation-delay: 1s !important;
+  }
+
+  /* NIGHT 写真 */
+  html body .s-night .night-photo {
+    opacity: 1 !important;
+    animation: mb-photo-float-soft 3.5s linear infinite !important;
+    transform-origin: 50% 50% !important;
+  }
+}
+
+/* ============================================================
+   メニュー写真 拡大モーダル（スマホ専用）
+   ・タップで写真を画面いっぱいに大きく表示
+   ・モーダル背景タップ or × ボタンで閉じる
+   ============================================================ */
+@media (max-width: 768px) {
+  /* メニューカードをタップ可能にする */
+  .menu-card { cursor: zoom-in !important; }
+
+  /* オーバーレイ：暗幕＋中央に写真を表示 */
+  .menu-photo-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    opacity: 0;
+    transition: opacity .3s ease;
+    cursor: zoom-out;
+  }
+  .menu-photo-overlay.is-open { opacity: 1; }
+
+  /* 拡大した写真本体 */
+  .menu-photo-overlay img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    transform: scale(0.85);
+    transition: transform .4s cubic-bezier(.34, 1.56, .64, 1);
+  }
+  .menu-photo-overlay.is-open img { transform: scale(1); }
+
+  /* メニュー名（写真の下に表示） */
+  .menu-photo-caption {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-weight: 900;
+    font-size: 22px;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0,0,0,.8);
+    pointer-events: none;
+  }
+
+  /* ×ボタン */
+  .menu-photo-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    border-radius: 50%;
+    font-size: 26px;
+    font-weight: 300;
+    line-height: 1;
+    color: #2A2A2A;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    padding: 0 0 4px 0;
+  }
+  .menu-photo-close:active { transform: scale(.92); }
+}
+
+/* ============================================================
+   メニュー写真タップヒント（スマホ専用）
+   「気になるメニューをタップ」 と表示してインタラクションを誘導
+   ============================================================ */
+.menu-tap-hint {
+  display: none;  /* デスクトップでは非表示（ホバー操作のため） */
+}
+
+@media (max-width: 768px) {
+  .menu-tap-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    margin: 8px auto 16px;
+    max-width: 320px;
+    padding: 10px 18px;
+
+    background: #FFF9E8;
+    color: #4D2401;
+    font-family: "Noto Sans JP", sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: .04em;
+    text-align: center;
+    line-height: 1.4;
+
+    border: 2px dashed #E9171E;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+
+    animation: menu-tap-hint-pulse 2s ease-in-out infinite;
+  }
+  /* タップして閉じた後はフェードアウト */
+  .menu-tap-hint.is-dismissed {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity .5s ease, transform .5s ease;
+    pointer-events: none;
+    animation: none;
+  }
+  /* 指アイコンが上下に動く */
+  .menu-tap-hint__icon {
+    font-size: 18px;
+    animation: menu-tap-hint-bounce 1.2s ease-in-out infinite;
+    display: inline-block;
+  }
+}
+
+/* ヒント全体のほのかな脈動（目を引くため） */
+@keyframes menu-tap-hint-pulse {
+  0%, 100% { transform: scale(1);     box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+  50%      { transform: scale(1.03);  box-shadow: 0 6px 18px rgba(233,23,30,.20); }
+}
+/* 指アイコンの上下ぴょこぴょこ */
+@keyframes menu-tap-hint-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
 }
