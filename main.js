@@ -383,4 +383,69 @@
       }
     });
   }
+
+  // ============================================================
+  // Google Analytics 4 — カスタムイベント計測
+  // gtag は index.html の <head> で読み込み済み。未読み込みなら no-op。
+  // ============================================================
+  function track(eventName, params) {
+    if (typeof window.gtag !== 'function') return;
+    window.gtag('event', eventName, params || {});
+  }
+
+  // (A) ACCESS セクションの主要 CTA（電話 / Instagram / LINE）
+  //     data-ga-event 属性付きアンカーを汎用フック
+  document.querySelectorAll('a[data-ga-event]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      track(el.getAttribute('data-ga-event'), {
+        link_label: el.getAttribute('data-ga-label') || '',
+        link_url:   el.getAttribute('href') || '',
+        link_text:  (el.textContent || '').trim().slice(0, 50)
+      });
+    });
+  });
+
+  // (B) ナビゲーション（ヘッダー & ハンバーガー & ヒーロー内ボタン）
+  //     #story / #menu / #access へのアンカー全部を一括計測
+  document.querySelectorAll('a[href^="#"]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      var target = el.getAttribute('href');
+      if (!target || target === '#') return;
+      track('nav_click', {
+        nav_target: target,                                  // 例: "#menu"
+        nav_text:   (el.textContent || '').trim().slice(0, 50),
+        nav_area:   el.closest('.hamburger-menu') ? 'hamburger'
+                  : el.closest('.hero-nav')       ? 'hero_nav'
+                  : el.closest('.acc-footer-nav') ? 'footer'
+                  : 'inline_button'
+      });
+    });
+  });
+
+  // (C) SUNDAY MENU カードのタップ（スマホで写真モーダルを開いた回数）
+  document.querySelectorAll('.menu-card').forEach(function (card) {
+    card.addEventListener('click', function () {
+      if (!window.matchMedia('(max-width: 768px)').matches) return;
+      var name = card.querySelector('.mc-name');
+      track('menu_card_tap', {
+        menu_name: name ? name.textContent.trim() : ''
+      });
+    });
+  });
+
+  // (D) Google マップ iframe へのクリック（focus イベントで間接検知）
+  //     iframe 内のクリックは直接取れないので、iframe へフォーカスが
+  //     移った瞬間 ≒ 地図を触り始めた、として記録する。
+  (function () {
+    var mapFrame = document.querySelector('iframe[src*="maps.google.com"], iframe[src*="google.com/maps"]');
+    if (!mapFrame) return;
+    var fired = false;
+    window.addEventListener('blur', function () {
+      if (fired) return;
+      if (document.activeElement === mapFrame) {
+        fired = true;
+        track('map_interact', { area: 'access_map' });
+      }
+    });
+  })();
 })();
