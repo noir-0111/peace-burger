@@ -55,27 +55,28 @@
       <img class="abs deco fx-twinkle-d1" style="--x:734;--y:294;--w:69;--h:65;" src="assets/img/s1/装飾①_19.png" alt="" aria-hidden="true">
       <img class="abs deco fx-twinkle-d2" style="--x:11;--y:359;--w:60;--h:65;" src="assets/img/s1/装飾①_21.png" alt="" aria-hidden="true">
 
-      <!-- 大見出し「第2・第4日曜はピースバーガーの日！」 -->
-      <img class="abs deco mb-keep mb-full hero-headline" style="--x:41;--y:374;--w:702;--h:237;mix-blend-mode:darken;" src="assets/img/s1/装飾①_08%20ver.2.png" alt="第2・第4日曜はピースバーガーの日！">
+      <!-- 大見出し「第2・第4日曜はピースバーガーの日！」（英語は ver.3 に差し替え） -->
+      <img class="abs deco mb-keep mb-full hero-headline" style="--x:41;--y:374;--w:702;--h:237;mix-blend-mode:darken;" src="assets/img/s1/装飾①_08%20ver.2.png" data-en-src="assets/img/s1/装飾①_08%20ver.3.png" data-en-alt="Every 2nd & 4th Sunday is PEACE BURGER Day!" alt="第2・第4日曜はピースバーガーの日！">
       <!-- 赤い波線（Figma書き出しの加工済みPNG＝1本の波線。R4対応） -->
       <img class="abs deco hero-wave" style="--x:93;--y:560;--w:405;--h:77;" src="assets/img/s1/装飾①_32-wave.png" alt="" aria-hidden="true">
       <!-- サブ見出し -->
-      <img class="abs deco mb-keep hero-subtitle" style="--x:107;--y:652;--w:561;--h:95;" src="assets/img/s1/装飾①_22.png" alt="自家製バンズの手作りハンバーガー">
+      <img class="abs deco mb-keep hero-subtitle" style="--x:107;--y:652;--w:561;--h:95;" src="assets/img/s1/装飾①_22.png" data-en-src="assets/img/s1/装飾①_22%20ver.2.png" data-en-alt="Handcrafted burgers, house-made buns" alt="自家製バンズの手作りハンバーガー">
       <!-- 麦（反転）: 本文と重ならないよう Figma 同様に左端へ -->
       <img class="abs deco flip-x fx-glow mb-show mb-bl mb-lg" style="--x:8;--y:747;--w:157;--h:204;" src="assets/img/s1/装飾①_27.png" alt="" aria-hidden="true">
 
       <!-- リード文 + CTA -->
       <!-- R1: 高さ可変の本文と直後のボタンは .flow にまとめてフロー配置し、重なりを防ぐ -->
       <div class="flow hero-cta" style="--x:176;--y:730;--w:600;">
-        <p class="hero-lead" style="--fs:20;" data-typewriter
+        <p class="hero-lead" style="--fs:20;" data-typewriter data-i18n="hero-lead"
            data-tw-start="1600" data-tw-speed="55">
           平尾のイタリアンバル「ヒルトヨル」が、<br>
           毎月第2・第4日曜のお昼だけハンバーガー店に大変身！<br>
           バンズから手作りの、特別な一日を楽しんで。
         </p>
         <div class="hero-btns">
-          <a class="btn btn--red"   href="#menu">MENUを見る <span aria-hidden="true">▶</span></a>
-          <a class="btn btn--white" href="#access">アクセス <span aria-hidden="true">▶</span></a>
+          <a class="btn btn--red"   href="#menu"   data-i18n="btn-menu">MENUを見る <span aria-hidden="true">▶</span></a>
+          <a class="btn btn--white" href="#access" data-i18n="btn-access">アクセス <span aria-hidden="true">▶</span></a>
+
         </div>
       </div>
 
@@ -129,14 +130,14 @@
       <div class="flow best-content" style="--x:1015;--y:388;--w:623;">
         <div class="best-price"><span class="yen">￥</span>1,300</div>
         <div class="best-divider" aria-hidden="true"></div>
-        <p class="best-desc" data-typewriter data-tw-on-view
+        <p class="best-desc" data-typewriter data-tw-on-view data-i18n="best-desc"
            data-tw-start="900" data-tw-speed="55">
           当店の看板メニュー。<br>
           自家製バンズに、ジューシーなパティ、<br>
           新鮮レタス、自家製ソース。<br>
           一度食べたら忘れられない一品です！
         </p>
-        <a class="best-btn" href="#menu">全メニューを見る <span aria-hidden="true">⇒</span></a>
+        <a class="best-btn" href="#menu" data-i18n="best-btn">全メニューを見る <span aria-hidden="true">⇒</span></a>
       </div>
     </section>
 
@@ -169,13 +170,13 @@
       <!-- タイトル（写真に近いので少し上げる） -->
       <div class="flow story-title" style="--x:394;--y:42;--w:910;">
         <div class="story-label">OUR STORY</div>
-        <h2 class="story-head">ヒルとヨル、二度たのしい店</h2>
+        <h2 class="story-head" data-i18n="story-head">ヒルとヨル、二度たのしい店</h2>
       </div>
       <!-- 見出し下の赤波線（まっすぐな波線・「ヒルとヨル」の直下） -->
       <img class="abs deco" style="--x:367;--y:214;--w:403;--h:46;" src="assets/img/s3/wave-straight.png" alt="" aria-hidden="true">
 
       <!-- 本文（R1: フローのまとまり） -->
-      <div class="flow story-body" style="--x:170;--y:332;--w:758;" data-text-rise>
+      <div class="flow story-body" style="--x:170;--y:332;--w:758;" data-text-rise data-i18n="story-body">
         <p>福岡・平尾のイタリアンバル「ヒルトヨル」<br>火曜から土曜の夜、ここはワインとパスタの店</p>
         <p>でも毎月第2・第4日曜日のお昼だけ<br><span class="pb-big">「<span class="pb-red">PEACE BURGER</span>」</span>として大変身します！</p>
         <p>「今日はバーガー食べに行こう！」<br>そう思ってもらえる手作りの一品を、月に二度だけ<br>バンズから一つひとつ、丁寧に焼き上げています！</p>
@@ -224,7 +225,7 @@
 
       <!-- タイトル -->
       <div class="secret-label">OUR&nbsp;&nbsp;SECRET</div>
-      <h2 class="secret-head">おいしい<span class="num">3</span>つの秘密</h2>
+      <h2 class="secret-head" data-i18n="secret-head">おいしい<span class="num">3</span>つの秘密</h2>
 
       <!-- 3カラム -->
       <div class="secret-row">
@@ -234,8 +235,8 @@
             <span class="col-badge"><img src="assets/img/s4/12_01_badge.png" alt="01"></span>
             <span class="col-handmade">Handmade!</span>
           </div>
-          <h3 class="col-title"><img class="title-mark" src="assets/img/s4/55_slash_marks_left.png" alt="" aria-hidden="true">自家製バンズ<img class="title-mark" src="assets/img/s4/57_equal_signs.png" alt="" aria-hidden="true"></h3>
-          <p class="col-desc">この日のために、店で焼き上げる<br>ふわふわで香ばしいバンズ</p>
+          <h3 class="col-title" data-i18n="col1-title"><img class="title-mark" src="assets/img/s4/55_slash_marks_left.png" alt="" aria-hidden="true">自家製バンズ<img class="title-mark" src="assets/img/s4/57_equal_signs.png" alt="" aria-hidden="true"></h3>
+          <p class="col-desc" data-i18n="col1-desc">この日のために、店で焼き上げる<br>ふわふわで香ばしいバンズ</p>
         </div>
         <div class="secret-col">
           <div class="col-photo">
@@ -243,8 +244,8 @@
             <span class="col-badge"><img src="assets/img/s4/25_02_badge.png" alt="02"></span>
             <span class="col-handmade">Handmade!</span>
           </div>
-          <h3 class="col-title"><img class="title-mark" src="assets/img/s4/55_slash_marks_left.png" alt="" aria-hidden="true">こだわりパティ<img class="title-mark" src="assets/img/s4/57_equal_signs.png" alt="" aria-hidden="true"></h3>
-          <p class="col-desc">食べた瞬間に「違う」と感じる<br>素材と火入れにこだわった一枚</p>
+          <h3 class="col-title" data-i18n="col2-title"><img class="title-mark" src="assets/img/s4/55_slash_marks_left.png" alt="" aria-hidden="true">こだわりパティ<img class="title-mark" src="assets/img/s4/57_equal_signs.png" alt="" aria-hidden="true"></h3>
+          <p class="col-desc" data-i18n="col2-desc">食べた瞬間に「違う」と感じる<br>素材と火入れにこだわった一枚</p>
         </div>
         <div class="secret-col">
           <div class="col-photo">
@@ -252,8 +253,8 @@
             <span class="col-badge"><img src="assets/img/s4/45_03_badge.png" alt="03"></span>
             <span class="col-handmade">Handmade!</span>
           </div>
-          <h3 class="col-title"><img class="title-mark" src="assets/img/s4/55_slash_marks_left.png" alt="" aria-hidden="true">週イチの特別感<img class="title-mark" src="assets/img/s4/57_equal_signs.png" alt="" aria-hidden="true"></h3>
-          <p class="col-desc">日曜だけだから、妥協なし<br>一品ずつ心を込めて作ります</p>
+          <h3 class="col-title" data-i18n="col3-title"><img class="title-mark" src="assets/img/s4/55_slash_marks_left.png" alt="" aria-hidden="true">週イチの特別感<img class="title-mark" src="assets/img/s4/57_equal_signs.png" alt="" aria-hidden="true"></h3>
+          <p class="col-desc" data-i18n="col3-desc">日曜だけだから、妥協なし<br>一品ずつ心を込めて作ります</p>
         </div>
       </div>
     </section>
@@ -282,12 +283,12 @@
       <img class="abs deco flip-x s5-twinkle-flip" style="--x:949;--y:200;--w:72;--h:71;" src="assets/img/s5/08_red_star_outline.png" alt="" aria-hidden="true">
       <div class="menu-title">MENU</div>
       <!-- 1番人気バッジ -->
-      <img class="abs deco--front menu-badge s5-badge-bobble" style="--x:81;--y:268;--w:193;--h:148;" src="assets/img/s5/17_ichiban_ninki_badge.png" alt="1番人気！">
+      <img class="abs deco--front menu-badge s5-badge-bobble" style="--x:81;--y:268;--w:193;--h:148;" src="assets/img/s5/17_ichiban_ninki_badge.png" data-en-src="assets/img/s5/17_ichiban_ninki_badge%20ver.2.png" data-en-alt="Most Popular!" alt="1番人気！">
 
       <!-- メニューカード 4枚（2×2） -->
       <div class="menu-grid">
         <!-- スマホ専用：タップで写真拡大できるヒント -->
-        <p class="menu-tap-hint" id="menuTapHint" aria-hidden="true">
+        <p class="menu-tap-hint" id="menuTapHint" aria-hidden="true" data-i18n="menu-tap-hint">
           <span class="menu-tap-hint__icon" aria-hidden="true">👆</span>
           気になるメニューをタップ
         </p>
@@ -297,9 +298,9 @@
             <div class="mc-photo"><img src="assets/img/s5/menu-peace.png" alt="Peace Burger"></div>
             <div class="mc-body">
               <div class="mc-name">Peace Burger</div>
-              <div class="mc-kana">ピースバーガー</div>
+              <div class="mc-kana" data-i18n="kana-peace">ピースバーガー</div>
               <div class="mc-price"><img class="mc-slash flip-x" src="assets/img/s5/07_red_slash_marks.png" alt="" aria-hidden="true"><span class="yen">￥</span><span class="num">1,300</span><img class="mc-slash" src="assets/img/s5/07_red_slash_marks.png" alt="" aria-hidden="true"></div>
-              <p class="mc-desc">迷ったらこれ！<br>大定番のBLT ビーフ100%パティと<br>レタス＋特製チーズソースをプラス！</p>
+              <p class="mc-desc" data-i18n="desc-peace">迷ったらこれ！<br>大定番のBLT ビーフ100%パティと<br>レタス＋特製チーズソースをプラス！</p>
             </div>
           </div>
           <!-- Teriyaki -->
@@ -307,9 +308,9 @@
             <div class="mc-photo"><img src="assets/img/s5/menu-teriyaki.png" alt="Teriyaki"></div>
             <div class="mc-body">
               <div class="mc-name">Teriyaki</div>
-              <div class="mc-kana">テリヤキ</div>
+              <div class="mc-kana" data-i18n="kana-teriyaki">テリヤキ</div>
               <div class="mc-price"><img class="mc-slash flip-x" src="assets/img/s5/07_red_slash_marks.png" alt="" aria-hidden="true"><span class="yen">￥</span><span class="num">1,300</span><img class="mc-slash" src="assets/img/s5/07_red_slash_marks.png" alt="" aria-hidden="true"></div>
-              <p class="mc-desc">絶妙な甘辛ソースが<br>旨さ抜群！相性抜群！</p>
+              <p class="mc-desc" data-i18n="desc-teriyaki">絶妙な甘辛ソースが<br>旨さ抜群！相性抜群！</p>
             </div>
           </div>
           <!-- Teriyaki Egg -->
@@ -317,9 +318,9 @@
             <div class="mc-photo"><img src="assets/img/s5/menu-teriyaki-egg.png" alt="Teriyaki Egg"></div>
             <div class="mc-body">
               <div class="mc-name">Teriyaki Egg</div>
-              <div class="mc-kana">テリヤキエッグ</div>
+              <div class="mc-kana" data-i18n="kana-teriyaki-egg">テリヤキエッグ</div>
               <div class="mc-price"><img class="mc-slash flip-x" src="assets/img/s5/07_red_slash_marks.png" alt="" aria-hidden="true"><span class="yen">￥</span><span class="num">1,500</span><img class="mc-slash" src="assets/img/s5/07_red_slash_marks.png" alt="" aria-hidden="true"></div>
-              <p class="mc-desc">テリヤキにとろっと卵オン<br>コク旨モリモリ！</p>
+              <p class="mc-desc" data-i18n="desc-teriyaki-egg">テリヤキにとろっと卵オン<br>コク旨モリモリ！</p>
             </div>
           </div>
           <!-- Ebikatsu -->
@@ -327,9 +328,9 @@
             <div class="mc-photo"><img src="assets/img/s5/menu-ebikatsu.png" alt="Ebikatsu"></div>
             <div class="mc-body">
               <div class="mc-name">Ebikatsu</div>
-              <div class="mc-kana">エビカツ</div>
+              <div class="mc-kana" data-i18n="kana-ebikatsu">エビカツ</div>
               <div class="mc-price"><img class="mc-slash flip-x" src="assets/img/s5/07_red_slash_marks.png" alt="" aria-hidden="true"><span class="yen">￥</span><span class="num">1,500</span><img class="mc-slash" src="assets/img/s5/07_red_slash_marks.png" alt="" aria-hidden="true"></div>
-              <p class="mc-desc">プリプリえびがたっぷり！<br>揚げたての食感がたまらない！</p>
+              <p class="mc-desc" data-i18n="desc-ebikatsu">プリプリえびがたっぷり！<br>揚げたての食感がたまらない！</p>
             </div>
           </div>
         </div>
@@ -339,19 +340,19 @@
           <span class="side-tag">SIDE MENU</span>
           <div class="side-item">
             <img class="si-icon" src="assets/img/s5/01_fries.png" alt="" aria-hidden="true">
-            <div class="si-text"><div class="si-name">Potato</div><div class="si-sub">全バーガーに付き</div><div class="si-price"><span class="si-unit">単品</span>￥300</div></div>
+            <div class="si-text"><div class="si-name">Potato</div><div class="si-sub" data-i18n="side-potato-sub">全バーガーに付き</div><div class="si-price"><span class="si-unit" data-i18n="side-potato-unit">単品</span>￥300</div></div>
           </div>
           <div class="side-item">
             <img class="si-icon" src="assets/img/s5/02_salad_bowl.png" alt="" aria-hidden="true">
-            <div class="si-text"><div class="si-name">Salad Set</div><div class="si-price">＋￥500</div><div class="si-sub">サラダ感覚！リフレッシュ</div></div>
+            <div class="si-text"><div class="si-name">Salad Set</div><div class="si-price">＋￥500</div><div class="si-sub" data-i18n="side-salad-sub">サラダ感覚！リフレッシュ</div></div>
           </div>
           <div class="side-item">
             <img class="si-icon" src="assets/img/s5/03_drink_straw.png" alt="" aria-hidden="true">
-            <div class="si-text"><div class="si-name">Soft Drink</div><div class="si-price">￥300</div><div class="si-sub">コーラー/オレンジ/烏龍茶<br>ジンジャエール/アイスコーヒー</div></div>
+            <div class="si-text"><div class="si-name">Soft Drink</div><div class="si-price">￥300</div><div class="si-sub" data-i18n="side-drink-sub">コーラー/オレンジ/烏龍茶<br>ジンジャエール/アイスコーヒー</div></div>
           </div>
           <div class="side-item">
             <span class="si-icon si-icon--2"><img src="assets/img/s5/04_wine_glass.png" alt="" aria-hidden="true"><img src="assets/img/s5/05_beer_mug.png" alt="" aria-hidden="true"></span>
-            <div class="si-text"><div class="si-name">Alcohol</div><div class="si-price">￥500</div><div class="si-sub">ハイボール/ワイン</div></div>
+            <div class="si-text"><div class="si-name">Alcohol</div><div class="si-price">￥500</div><div class="si-sub" data-i18n="side-alcohol-sub">ハイボール/ワイン</div></div>
           </div>
         </div>
       </div>
@@ -380,26 +381,26 @@
       <!-- タイトル -->
       <div class="flow night-title" style="--x:193;--y:13;--w:1264;">
         <div class="night-label">AT NIGHT</div>
-        <h2 class="night-head">ヨルは、イタリアンバルへ</h2>
+        <h2 class="night-head" data-i18n="night-head">ヨルは、イタリアンバルへ</h2>
       </div>
       <img class="abs deco s6-wave" style="--x:659;--y:216;--w:676;--h:47;object-fit:fill;" src="assets/img/s6/07_wavy_line_yellow.png" alt="" aria-hidden="true">
 
       <!-- 本文（R1: フロー）／赤枠の見出しが出た後、タイピング順次発火 -->
       <div class="flow night-text" style="--x:251;--y:314;--w:758;">
-        <p data-typewriter data-tw-on-view data-tw-no-cursor data-tw-start="1800" data-tw-speed="45">火曜から日曜の夜<br>同じ場所が「ヒルトヨル」になります</p>
-        <p data-typewriter data-tw-on-view data-tw-no-cursor data-tw-start="2950" data-tw-speed="45">自家製パスタや本格イタリアン料理を<br>こだわりのワインと一緒に。<br>落ち着いた大人の空間で、ゆっくりとした夜を。</p>
-        <p data-typewriter data-tw-on-view                    data-tw-start="5300" data-tw-speed="45">「ヒルとヨル、二度たのしい」<br>それが、ヒルトヨルです。</p>
+        <p data-typewriter data-tw-on-view data-tw-no-cursor data-i18n="night-text-1" data-tw-start="300" data-tw-speed="38">火曜から日曜の夜<br>同じ場所が「ヒルトヨル」になります</p>
+        <p data-typewriter data-tw-on-view data-tw-no-cursor data-i18n="night-text-2" data-tw-start="1300" data-tw-speed="38">自家製パスタや本格イタリアン料理を<br>こだわりのワインと一緒に。<br>落ち着いた大人の空間で、ゆっくりとした夜を。</p>
+        <p data-typewriter data-tw-on-view                    data-i18n="night-text-3" data-tw-start="2700" data-tw-speed="38">「ヒルとヨル、二度たのしい」<br>それが、ヒルトヨルです。</p>
       </div>
 
       <!-- 営業時間（手書き風の下線2本） -->
       <div class="flow night-hours" style="--x:357;--y:712;--w:540;">
-        <span class="nh-txt">18:00 - 23:00 ／ 火 - 日</span>
+        <span class="nh-txt" data-i18n="night-hours">18:00 - 23:00 ／ 火 - 日</span>
         <i class="nh-line nh-l1" aria-hidden="true"></i>
         <i class="nh-line nh-l2" aria-hidden="true"></i>
       </div>
 
       <!-- ブランド名 -->
-      <div class="flow night-brand" style="--x:520;--y:848;--w:700;">
+      <div class="flow night-brand" style="--x:520;--y:848;--w:700;" data-i18n="night-brand">
         <img class="brand-mark" src="assets/img/s6/13_impact_marks_yellow.png" alt="" aria-hidden="true">
         ヒルトヨル
         <img class="brand-mark flip-x" src="assets/img/s6/13_impact_marks_yellow.png" alt="" aria-hidden="true">
@@ -433,44 +434,44 @@
       <!-- タイトル -->
       <div class="flow acc-title" style="--x:508;--y:51;--w:695;">
         <div class="acc-eyebrow">ACCESS</div>
-        <h2 class="acc-head">お店までの行き方</h2>
+        <h2 class="acc-head" data-i18n="acc-head">お店までの行き方</h2>
       </div>
       <img class="abs deco s7-wave" style="--x:505;--y:190;--w:486;--h:51;transform:rotate(-0.6deg);" src="assets/img/s7/wave-straight.png" alt="" aria-hidden="true">
 
       <!-- 店舗情報カード -->
       <div class="abs acc-card" style="--x:123;--y:268.58;--w:612;--h:360.416;">
         <div class="acc-card-head">PEACE BURGER</div>
-        <div class="acc-card-sub">italian bar ヒルトヨル</div>
+        <div class="acc-card-sub" data-i18n="acc-card-sub">italian bar ヒルトヨル</div>
         <table class="acc-info">
           <tr>
             <td class="ai"><img src="assets/img/s7/30_map_pin_icon.png" alt="" aria-hidden="true"></td>
-            <td class="al">住所</td>
-            <td class="av">〒815-0071<br>福岡県福岡市南区平和2-1-1</td>
+            <td class="al" data-i18n="acc-addr-label">住所</td>
+            <td class="av" data-i18n="acc-addr-value">〒815-0071<br>福岡県福岡市南区平和2-1-1</td>
           </tr>
           <tr>
             <td class="ai"><img src="assets/img/s7/31_phone_icon_red.png" alt="" aria-hidden="true"></td>
-            <td class="al">電話</td>
+            <td class="al" data-i18n="acc-tel-label">電話</td>
             <td class="av">092-406-6305</td>
           </tr>
           <tr>
             <td class="ai"><img src="assets/img/s7/32_clock_icon.png" alt="" aria-hidden="true"></td>
-            <td class="al">営業時間<small>(PEACE BURGER)</small></td>
-            <td class="av">毎月第2・第4日曜 11:30 〜 15:00</td>
+            <td class="al" data-i18n="acc-hours-pb-label">営業時間<small>(PEACE BURGER)</small></td>
+            <td class="av" data-i18n="acc-hours-pb-value">毎月第2・第4日曜 11:30 〜 15:00</td>
           </tr>
           <tr>
             <td class="ai"><img src="assets/img/s7/33_moon_icon_brown.png" alt="" aria-hidden="true"></td>
-            <td class="al">営業時間<small>(ヒルトヨル)</small></td>
-            <td class="av">火〜日 18:00 〜 23:00</td>
+            <td class="al" data-i18n="acc-hours-hy-label">営業時間<small>(ヒルトヨル)</small></td>
+            <td class="av" data-i18n="acc-hours-hy-value">火〜日 18:00 〜 23:00</td>
           </tr>
           <tr>
             <td class="ai"><img src="assets/img/s7/34_prohibited_icon.png" alt="" aria-hidden="true"></td>
-            <td class="al">定休日</td>
-            <td class="av">月曜定休</td>
+            <td class="al" data-i18n="acc-closed-label">定休日</td>
+            <td class="av" data-i18n="acc-closed-value">月曜定休</td>
           </tr>
           <tr class="last">
             <td class="ai"><img src="assets/img/s7/36_credit_card_icon.png" alt="" aria-hidden="true"></td>
-            <td class="al">支払い方法</td>
-            <td class="av">現金 / クレジットカード<br>電子マネー / QR決済</td>
+            <td class="al" data-i18n="acc-pay-label">支払い方法</td>
+            <td class="av" data-i18n="acc-pay-value">現金 / クレジットカード<br>電子マネー / QR決済</td>
           </tr>
         </table>
       </div>
@@ -486,7 +487,7 @@
       <!-- 問い合わせ文 -->
       <div class="flow acc-inquiry" style="--x:407;--y:636;--w:858;">
         <img class="acc-mark" style="transform:rotate(33deg);" src="assets/img/s7/03_impact_marks_left.png" alt="" aria-hidden="true">
-        <p>気になる方はお気軽にお問い合わせください！</p>
+        <p data-i18n="acc-inquiry">気になる方はお気軽にお問い合わせください！</p>
         <img class="acc-mark" style="transform:rotate(135deg);" src="assets/img/s7/03_impact_marks_left.png" alt="" aria-hidden="true">
       </div>
 
@@ -494,7 +495,7 @@
       <div class="abs acc-cta" style="--x:130;--y:683;--w:1458;--h:117;">
         <a class="cta cta--tel" href="tel:0924066305" data-ga-event="cta_tel" data-ga-label="access_tel">
           <span class="cta-ic cta-ic--ring"><img src="assets/img/s7/31_phone_icon_red.png" alt="" aria-hidden="true"></span>
-          <span class="cta-tx"><b>電話する</b><span>092-406-6305</span></span>
+          <span class="cta-tx"><b data-i18n="cta-tel">電話する</b><span>092-406-6305</span></span>
         </a>
         <a class="cta cta--ig" href="https://www.instagram.com/italian_bar_hirutoyoru/" target="_blank" rel="noopener" data-ga-event="cta_instagram" data-ga-label="access_instagram">
           <span class="cta-ic"><img src="assets/img/s7/Instagram.png" alt="" aria-hidden="true"></span>
@@ -502,7 +503,7 @@
         </a>
         <a class="cta cta--line" href="https://lin.ee/5VGUL4B" target="_blank" rel="noopener" data-ga-event="cta_line" data-ga-label="access_line">
           <span class="cta-ic"><img src="assets/img/s7/LINE.png" alt="" aria-hidden="true"></span>
-          <span class="cta-tx"><b class="line-name">LINE公式</b><span>友だち追加で最新情報</span></span>
+          <span class="cta-tx"><b class="line-name" data-i18n="cta-line">LINE公式</b><span data-i18n="cta-line-sub">友だち追加で最新情報</span></span>
         </a>
       </div>
 
@@ -527,6 +528,12 @@
       </nav>
     </section>
 
+  </div>
+
+  <!-- 言語切替トグル（右上固定・日英） -->
+  <div class="lang-switch" id="langSwitch" role="group" aria-label="Language / 言語">
+    <button type="button" class="lang-btn is-active" data-lang-btn="ja" aria-pressed="true">日本語</button>
+    <button type="button" class="lang-btn"           data-lang-btn="en" aria-pressed="false">EN</button>
   </div>
 
   <!-- スクロール誘導インジケータ（固定・右下） -->

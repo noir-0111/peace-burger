@@ -798,11 +798,11 @@ body {
   animation: secret-col-slide-from-right 1s cubic-bezier(.22, 1, .36, 1) both;
   will-change: transform;
 }
-/* 2秒間隔で1枚ずつ。1枚目も 2 秒待機してからスタート。
-   発火順：2.0s → 4.0s → 6.0s（全部出揃うまで約7秒） */
-.s-secret.in-view .secret-col:nth-child(1) { animation-delay: 2s; }
-.s-secret.in-view .secret-col:nth-child(2) { animation-delay: 4s; }
-.s-secret.in-view .secret-col:nth-child(3) { animation-delay: 6s; }
+/* 1枚目はほぼ即時、短い間隔で連続表示。
+   発火順：0.1s → 0.4s → 0.7s（全部出揃うまで約1.7秒） */
+.s-secret.in-view .secret-col:nth-child(1) { animation-delay: 0.1s; }
+.s-secret.in-view .secret-col:nth-child(2) { animation-delay: 0.4s; }
+.s-secret.in-view .secret-col:nth-child(3) { animation-delay: 0.7s; }
 
 /* ---- 「3」：初期はゼロスケールで非表示 ---- */
 .s-secret[data-animate-on-view] .secret-head .num {
@@ -1326,7 +1326,7 @@ body {
 .acc-info .ai img { width: calc(26/var(--design-w)*100cqi); height: auto; }
 .acc-info .al { width: calc(186/var(--design-w)*100cqi); font-size: calc(19/var(--design-w)*100cqi); white-space: nowrap; }
 .acc-info .al small { display: block; font-size: calc(14/var(--design-w)*100cqi); font-weight: 700; line-height: 1.05; }
-.acc-info .av { border-left: 1px solid rgba(77,36,1,.4); padding-left: calc(12/var(--design-w)*100cqi); font-size: calc(18/var(--design-w)*100cqi); line-height: 1.25; }
+.acc-info .av { border-left: 1px solid rgba(77,36,1,.4); padding-left: calc(12/var(--design-w)*100cqi); padding-right: calc(12/var(--design-w)*100cqi); font-size: calc(18/var(--design-w)*100cqi); line-height: 1.25; text-align: center; }
 
 /* Googleマップ */
 .acc-map { z-index: 4; background: #FDF2D8; border: calc(4/var(--design-w)*100cqi) solid #0D0D0D; border-radius: calc(20/var(--design-w)*100cqi); overflow: hidden; }
@@ -2315,7 +2315,9 @@ body {
    ・バックドロップタップでも閉じる
    ・デスクトップでは display:none で非表示
    ============================================================ */
-.hamburger-btn {
+.hamburger-btn,
+.hamburger-menu,
+.hamburger-backdrop {
   display: none; /* デフォルト非表示。モバイルだけ表示 */
 }
 
@@ -2410,6 +2412,7 @@ body {
 
   /* ---- バックドロップ（外側タップで閉じる） ---- */
   .hamburger-backdrop {
+    display: block;
     position: fixed;
     inset: 0;
     z-index: 198;
@@ -2630,4 +2633,91 @@ body {
 @keyframes menu-tap-hint-bounce {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-4px); }
+}
+
+/* ============================================================
+   言語切替トグル（右上固定・日英）
+   ・PC/スマホ共通で画面右上に固定
+   ・スマホはハンバーガーボタン(48px/right:14px)の左隣に並べる
+   ============================================================ */
+.lang-switch {
+  position: fixed;
+  top: 18px;
+  right: 24px;
+  z-index: 150;
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: #fff;
+  border: 2px solid #4D2401;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .18);
+}
+.lang-switch .lang-btn {
+  appearance: none;
+  border: 0;
+  margin: 0;
+  cursor: pointer;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: transparent;
+  color: #4D2401;
+  font-family: "Fredoka", "Noto Sans JP", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: .02em;
+  transition: background .2s ease, color .2s ease, transform .12s ease;
+}
+.lang-switch .lang-btn:hover { background: #FFE9A8; }
+.lang-switch .lang-btn:active { transform: scale(.94); }
+.lang-switch .lang-btn.is-active {
+  background: #E9171E;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  /* ハンバーガー(右14px・幅48px)の左隣へ。高さも合わせてコンパクトに */
+  .lang-switch {
+    top: 16px;
+    right: 72px;
+    padding: 2px;
+  }
+  .lang-switch .lang-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+
+/* ============================================================
+   英語版（EN）レイアウト微調整 — デスクトップのみ
+   英語は日本語より文字数が多く、固定レイアウト（aspect-ratio /
+   絶対配置）でテキストがはみ出す/重なるため、EN時だけ縮小して収める。
+   モバイル(≤768px)は縦積みレイアウトのため対象外。
+   ============================================================ */
+/* 英語サブ見出し画像（装飾①_22 ver.2）は白背景のため、見出しと同様に
+   darken で白を背景へ溶かす（PC/スマホ共通） */
+html[lang="en"] .hero-subtitle { mix-blend-mode: darken; }
+
+@media (min-width: 769px) {
+  /* #4 AT NIGHT 本文：幅を写真手前までに絞り、その範囲内でできるだけ大きく */
+  html[lang="en"] .night-text {
+    font-size: calc(25 / var(--design-w) * 100cqi);
+    line-height: calc(37 / var(--design-w) * 100cqi);
+    width: calc(560 / var(--design-w) * 100cqi);
+  }
+
+  /* #2 SIDE MENU：箱がセクション(aspect-ratio固定)からはみ出さないよう縮小 */
+  html[lang="en"] .si-name  { font-size: calc(24 / var(--design-w) * 100cqi); }
+  html[lang="en"] .si-price { font-size: calc(21 / var(--design-w) * 100cqi); }
+  html[lang="en"] .si-sub   { font-size: calc(12.5 / var(--design-w) * 100cqi); line-height: 1.25; }
+  html[lang="en"] .side-menu {
+    padding-top: calc(18 / var(--design-w) * 100cqi);
+    padding-bottom: calc(8 / var(--design-w) * 100cqi);
+  }
+
+  /* #5 ACCESS カード：支払い行がカード下辺をはみ出さないよう行間を詰める */
+  html[lang="en"] .acc-info td   { padding: calc(1 / var(--design-w) * 100cqi) 0; }
+  html[lang="en"] .acc-info .av  { font-size: calc(16.5 / var(--design-w) * 100cqi); line-height: 1.2; }
+  html[lang="en"] .acc-info .al  { font-size: calc(17 / var(--design-w) * 100cqi); }
 }
