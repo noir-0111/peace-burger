@@ -4,5 +4,5 @@
 User-agent: *
 Allow: /
 
-# サイトマップを将来追加した場合はここに記載
-# Sitemap: https://peaceburger.example.com/sitemap.xml
+# サイトマップの場所を Google に明示
+Sitemap: https://peace-burger.pages.dev/sitemap.xml

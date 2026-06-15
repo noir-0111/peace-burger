@@ -3,11 +3,111 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PEACE BURGER｜福岡・平尾の日曜限定ハンバーガー店</title>
-  <meta name="description" content="福岡市平尾のイタリアンバル「ヒルトヨル」が、毎月第2・第4日曜のお昼だけ手作りハンバーガー店「PEACE BURGER」に大変身。バンズから手作りの、特別な日曜のお昼を。">
+
+  <!-- ===== 基本 SEO ===== -->
+  <title>PEACE BURGER｜福岡・平尾の日曜限定ハンバーガー店｜自家製バンズの手作りバーガー</title>
+  <meta name="description" content="福岡市平尾のイタリアンバル「ヒルトヨル」が、毎月第2・第4日曜のお昼だけ手作りハンバーガー店「PEACE BURGER」に大変身。バンズから一つひとつ自家製、平尾駅から徒歩圏内。Peace Burger ¥1,300、Teriyaki ¥1,300 ほか全4種。">
+  <meta name="keywords" content="PEACE BURGER,ピースバーガー,ヒルトヨル,イタリアンバル,福岡 ハンバーガー,平尾 ハンバーガー,平尾 ランチ,自家製バンズ,福岡市南区 グルメ,西鉄平尾,薬院 ハンバーガー">
+  <meta name="author" content="PEACE BURGER">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://peace-burger.pages.dev/">
+
+  <!-- ===== Google Search Console 認証用 ===== -->
+  <!-- TODO: Search Console で発行された値に書き換える -->
+  <!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE_HERE"> -->
+
+  <!-- ===== Open Graph（SNS / LINE / Facebook シェア） ===== -->
+  <meta property="og:type" content="restaurant">
+  <meta property="og:site_name" content="PEACE BURGER">
   <meta property="og:title" content="PEACE BURGER｜福岡・平尾の日曜限定ハンバーガー店">
-  <meta property="og:description" content="毎月第2・第4日曜 11:30〜15:00、手作りバンズのハンバーガーをお届けします。">
-  <meta property="og:type" content="website">
+  <meta property="og:description" content="毎月第2・第4日曜 11:30〜15:00、自家製バンズの手作りハンバーガーをお届けします。福岡市平尾、bar italiano ヒルトヨルが日曜だけバーガー店に大変身。">
+  <meta property="og:url" content="https://peace-burger.pages.dev/">
+  <meta property="og:image" content="https://peace-burger.pages.dev/assets/img/photo/hero-burger.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="PEACE BURGER のシグネチャーバーガー（ポテト・ビール付き）">
+  <meta property="og:locale" content="ja_JP">
+
+  <!-- ===== Twitter Card ===== -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PEACE BURGER｜福岡・平尾の日曜限定ハンバーガー店">
+  <meta name="twitter:description" content="毎月第2・第4日曜のお昼だけ、自家製バンズの手作りハンバーガー。福岡市平尾、bar italiano ヒルトヨルから生まれた日曜限定店。">
+  <meta name="twitter:image" content="https://peace-burger.pages.dev/assets/img/photo/hero-burger.jpg">
+
+  <!-- ===== JSON-LD: Restaurant 構造化データ（Google リッチリザルト用） ===== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "@id": "https://peace-burger.pages.dev/#restaurant",
+    "name": "PEACE BURGER",
+    "alternateName": ["ピースバーガー", "bar italiano ヒルトヨル"],
+    "description": "福岡市平尾のイタリアンバル「ヒルトヨル」が、毎月第2・第4日曜のお昼だけ自家製バンズの手作りハンバーガー店「PEACE BURGER」に大変身します。",
+    "url": "https://peace-burger.pages.dev/",
+    "telephone": "+81-92-406-6305",
+    "image": [
+      "https://peace-burger.pages.dev/assets/img/photo/hero-burger.jpg",
+      "https://peace-burger.pages.dev/assets/img/photo/signature-burger.png"
+    ],
+    "logo": "https://peace-burger.pages.dev/assets/img/photo/hero-burger.jpg",
+    "priceRange": "¥¥",
+    "servesCuisine": ["Hamburger", "American", "Italian"],
+    "acceptsReservations": false,
+    "paymentAccepted": ["Cash", "Credit Card", "Electronic Money", "QR Code"],
+    "currenciesAccepted": "JPY",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "平和2-1-1",
+      "addressLocality": "福岡市南区",
+      "addressRegion": "福岡県",
+      "postalCode": "815-0071",
+      "addressCountry": "JP"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 33.5752,
+      "longitude": 130.4099
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Sunday",
+        "opens": "11:30",
+        "closes": "15:00",
+        "description": "毎月第2・第4日曜のみ営業（PEACE BURGER）"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+        "opens": "18:00",
+        "closes": "23:00",
+        "description": "火〜日の夜（bar italiano ヒルトヨル）"
+      }
+    ],
+    "hasMenu": {
+      "@type": "Menu",
+      "name": "SUNDAY MENU",
+      "hasMenuSection": [
+        {
+          "@type": "MenuSection",
+          "name": "バーガー",
+          "hasMenuItem": [
+            { "@type": "MenuItem", "name": "Peace Burger", "description": "大定番のBLT、ビーフ100%パティとレタス＋特製チーズソース", "offers": { "@type": "Offer", "price": "1300", "priceCurrency": "JPY" } },
+            { "@type": "MenuItem", "name": "Teriyaki",     "description": "絶妙な甘辛ソースが旨さ抜群",                                "offers": { "@type": "Offer", "price": "1300", "priceCurrency": "JPY" } },
+            { "@type": "MenuItem", "name": "Teriyaki Egg", "description": "テリヤキにとろっと卵オン",                                  "offers": { "@type": "Offer", "price": "1500", "priceCurrency": "JPY" } },
+            { "@type": "MenuItem", "name": "Ebikatsu",     "description": "プリプリえびがたっぷり、揚げたての食感",                  "offers": { "@type": "Offer", "price": "1500", "priceCurrency": "JPY" } }
+          ]
+        }
+      ]
+    },
+    "sameAs": [
+      "https://www.instagram.com/italian_bar_hirutoyoru/",
+      "https://lin.ee/5VGUL4B"
+    ]
+  }
+  </script>
+
+  <!-- ===== フォントとスタイル ===== -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Fredoka:wght@500;600;700&family=Kameron:wght@700&family=Noto+Sans+JP:wght@500;700;900&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">

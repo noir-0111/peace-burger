@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- トップページ -->
+  <url>
+    <loc>https://peace-burger.pages.dev/</loc>
+    <lastmod>2026-05-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://peace-burger.pages.dev/assets/img/photo/hero-burger.jpg</image:loc>
+      <image:title>PEACE BURGER のシグネチャーバーガー</image:title>
+      <image:caption>ポテト・ビール付きの看板ハンバーガー</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://peace-burger.pages.dev/assets/img/photo/signature-burger.png</image:loc>
+      <image:title>Peace Burger ¥1,300</image:title>
+      <image:caption>当店の看板メニュー、ビーフ100%パティと自家製バンズ</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://peace-burger.pages.dev/assets/img/photo/story-staff.png</image:loc>
+      <image:title>PEACE BURGER のスタッフ</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://peace-burger.pages.dev/assets/img/photo/story-exterior.png</image:loc>
+      <image:title>平尾の店舗外観</image:title>
+    </image:image>
+  </url>
+
+  <!-- 各セクションへのアンカーリンク（参考用、Google は通常無視するが念のため） -->
+  <!--
+  <url><loc>https://peace-burger.pages.dev/#story</loc></url>
+  <url><loc>https://peace-burger.pages.dev/#menu</loc></url>
+  <url><loc>https://peace-burger.pages.dev/#access</loc></url>
+  -->
+</urlset>
