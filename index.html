@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- ===== Favicon / アイコン ===== -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <meta name="theme-color" content="#FFD43B">
+
   <!-- ===== 基本 SEO ===== -->
   <title>PEACE BURGER｜福岡・平尾の日曜限定ハンバーガー店｜自家製バンズの手作りバーガー</title>
   <meta name="description" content="福岡市平尾のイタリアンバル「ヒルトヨル」が、毎月第2・第4日曜のお昼だけ手作りハンバーガー店「PEACE BURGER」に大変身。バンズから一つひとつ自家製、平尾駅から徒歩圏内。Peace Burger ¥1,300、Teriyaki ¥1,300 ほか全4種。">
@@ -49,7 +57,7 @@
       "https://peace-burger.pages.dev/assets/img/photo/hero-burger.jpg",
       "https://peace-burger.pages.dev/assets/img/photo/signature-burger.png"
     ],
-    "logo": "https://peace-burger.pages.dev/assets/img/photo/hero-burger.jpg",
+    "logo": "https://peace-burger.pages.dev/icon-512.png",
     "priceRange": "¥¥",
     "servesCuisine": ["Hamburger", "American", "Italian"],
     "acceptsReservations": false,
@@ -99,6 +107,42 @@
           ]
         }
       ]
+    },
+    "sameAs": [
+      "https://www.instagram.com/italian_bar_hirutoyoru/",
+      "https://lin.ee/5VGUL4B"
+    ]
+  }
+  </script>
+
+  <!-- ===== JSON-LD: WebSite（サイト名を Google に明示） ===== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://peace-burger.pages.dev/#website",
+    "name": "PEACE BURGER",
+    "alternateName": ["ピースバーガー", "PEACE BURGER 平尾", "bar italiano ヒルトヨル"],
+    "url": "https://peace-burger.pages.dev/",
+    "inLanguage": "ja",
+    "publisher": { "@id": "https://peace-burger.pages.dev/#restaurant" }
+  }
+  </script>
+
+  <!-- ===== JSON-LD: Organization（ロゴをGoogleに明示） ===== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": "https://peace-burger.pages.dev/#organization",
+    "name": "PEACE BURGER",
+    "alternateName": "ピースバーガー",
+    "url": "https://peace-burger.pages.dev/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://peace-burger.pages.dev/icon-512.png",
+      "width": 512,
+      "height": 512
     },
     "sameAs": [
       "https://www.instagram.com/italian_bar_hirutoyoru/",
