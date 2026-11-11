@@ -1,65 +1,24 @@
-# PEACE BURGER LP — デプロイ用フォルダ
+# PEACE BURGER — 本番サイト
 
-このフォルダは Cloudflare Pages へのデプロイ用にクリーンアップされた本番用ファイル一式です。
+本番URL: https://peace-burger.pages.dev/
 
-## 含まれるもの
+Cloudflare Pages の `peace-burger` プロジェクトは、このリポジトリの `main` の更新を自動配信します。FrameworkはNone、ビルドコマンドなし、出力ディレクトリはルートです。
 
-| ファイル / フォルダ | 説明 |
-|---|---|
-| `index.html` | メインの HTML ファイル |
-| `styles.css` | スタイルシート |
-| `main.js` | JavaScript（タイプライター、アニメ等） |
-| `assets/img/` | 画像素材（28MB） |
-| `_headers` | Cloudflare Pages の HTTP ヘッダー設定（キャッシュ・セキュリティ） |
-| `robots.txt` | 検索エンジンクローラー向け設定 |
+## 公開ファイル
 
-## デプロイ方法
+- `index.html` / `styles.css` / `preview.js`: ページ・デザイン・動作
+- `i18n.mjs`: 日本語・英語・韓国語・簡体字中国語
+- `calendar-utils.mjs` / `food-films.mjs`: 営業カレンダー・動画
+- `analytics.mjs`: 既存の電話・SNSクリック計測
+- `assets/`: 画像・動画
+- `_headers` / `robots.txt` / `sitemap.xml`: 公開・検索設定
 
-### 方法 A：ドラッグ&ドロップ（一番簡単）
-1. [Cloudflare ダッシュボード](https://dash.cloudflare.com/) にログイン
-2. **Workers & Pages** → **Create application** → **Pages** タブ → **Upload assets**
-3. プロジェクト名を入力（例：`peace-burger`）
-4. **このフォルダ全体** をドラッグ&ドロップ
-5. **Deploy site** ボタン
-6. 数分で完了 → `https://peace-burger.pages.dev` で公開
+## 更新
 
-### 方法 B：Wrangler CLI
-```bash
-cd /Users/kotaro/Desktop/peace-burger-dist
-wrangler pages deploy . --project-name=peace-burger
-```
+変更ファイルと参照素材を確認し、スマホ幅とPCで確認した後、必要なファイルだけcommit・pushします。GitHubのCloudflare Pagesチェックが成功したことと、本番URLの表示を確認してください。
 
-詳しい解説は親フォルダの `ANIMATION_PLAYBOOK.md` や、デプロイガイドの会話履歴を参照。
+制作資料・元動画・確認用サイト・バックアップは `リニューアル/` 内で管理し、公開リポジトリには追加しません。以前の `assets/img/` は既存の画像URLの互換性のため保持しています。
 
-## 更新方法
+## 切り戻し
 
-サイトを更新したら：
-1. 元の作業フォルダ（`peace-burger-imagesのコピー`）で編集
-2. 変更したファイルだけ、このフォルダ（`peace-burger-dist`）にも反映
-3. 再度 Cloudflare にアップロード
-
-または、後述の同期スクリプトを使う：
-
-```bash
-# 例：作業フォルダから dist にファイルだけ更新
-SRC="/Users/kotaro/Desktop/peace-burger-imagesのコピー"
-DIST="/Users/kotaro/Desktop/peace-burger-dist"
-cp "$SRC/index.html" "$SRC/styles.css" "$SRC/main.js" "$DIST/"
-rsync -a --delete "$SRC/assets/img/" "$DIST/assets/img/"
-find "$DIST" -name ".DS_Store" -delete
-```
-
-## 容量
-合計：約 28 MB（うち 28MB は画像。Cloudflare Pages の無料枠は 25MB/ファイル、無制限/合計）
-
-## 含めなかったもの（社内資料・バックアップ等）
-- `ANIMATION_PLAYBOOK.md`
-- `FIGMA_TO_CODE_PLAYBOOK.md`
-- `CLAUDE.md`
-- `MAPPING.md`
-- `_animation-toolkit/`
-- `_backup_旧実装/`
-- `素材_原本/`
-- `assets/figma/`（HTML/CSS で参照なし）
-
-　
+公開した変更commitを `git revert` し、`main` へpushします。Cloudflare Pagesの成功結果と本番の表示を確認してください。強制pushは不要です。

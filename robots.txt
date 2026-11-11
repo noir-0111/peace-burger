@@ -1,8 +1,4 @@
-# robots.txt for PEACE BURGER LP
-# 全てのクローラーに対して全ページのインデックスを許可
-
 User-agent: *
 Allow: /
 
-# サイトマップの場所を Google に明示
 Sitemap: https://peace-burger.pages.dev/sitemap.xml
