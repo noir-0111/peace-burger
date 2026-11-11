@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "include": [
+    "/assets/film/signature.mp4",
+    "/assets/film/griddle.mp4"
+  ],
+  "exclude": []
+}

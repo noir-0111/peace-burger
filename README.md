@@ -12,6 +12,7 @@ Cloudflare Pages の `peace-burger` プロジェクトは、このリポジト�
 - `analytics.mjs`: 既存の電話・SNSクリック計測
 - `assets/`: 画像・動画
 - `_headers` / `robots.txt` / `sitemap.xml`: 公開・検索設定
+- `functions/assets/film/[[path]].js` / `_routes.json`: 動画2本の部分読み込み（Range）対応。その他のページは静的配信。
 
 ## 更新
 
